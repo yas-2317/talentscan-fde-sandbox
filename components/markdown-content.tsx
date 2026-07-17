@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { MermaidDiagram } from "@/components/mermaid-diagram";
 
 type Block =
   | { type: "heading"; level: number; text: string }
@@ -96,6 +97,32 @@ function parseMarkdown(markdown: string): Block[] {
   return blocks;
 }
 
+function plainText(text: string) {
+  return text
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/[`*_]/g, "")
+    .trim();
+}
+
+function headingId(text: string) {
+  return plainText(text)
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\p{L}\p{N}-]/gu, "")
+    .replace(/-+/g, "-");
+}
+
+export function extractMarkdownHeadings(content: string) {
+  return parseMarkdown(content)
+    .filter((block): block is Extract<Block, { type: "heading" }> => block.type === "heading")
+    .filter((heading) => heading.level === 2 || heading.level === 3)
+    .map((heading) => ({
+      id: headingId(heading.text),
+      level: heading.level,
+      text: plainText(heading.text),
+    }));
+}
+
 function inlineMarkdown(text: string): ReactNode[] {
   const pattern = /(\[[^\]]+\]\(https?:\/\/[^)]+\)|`[^`]+`|\*\*[^*]+\*\*)/g;
 
@@ -114,40 +141,86 @@ function inlineMarkdown(text: string): ReactNode[] {
   });
 }
 
-export function MarkdownContent({ content }: { content: string }) {
-  const blocks = parseMarkdown(content);
+function renderBlock(block: Block, index: number) {
+  if (block.type === "heading") {
+    const Heading = `h${block.level}` as keyof React.JSX.IntrinsicElements;
+    return <Heading id={headingId(block.text)} key={index}>{inlineMarkdown(block.text)}</Heading>;
+  }
+  if (block.type === "list") {
+    const List = block.ordered ? "ol" : "ul";
+    return (
+      <List key={index}>
+        {block.items.map((item, itemIndex) => <li key={itemIndex}>{inlineMarkdown(item)}</li>)}
+      </List>
+    );
+  }
+  if (block.type === "table") {
+    const [head, ...body] = block.rows;
+    return (
+      <div className="table-scroll" key={index}>
+        <table>
+          <thead><tr>{head.map((cell, cellIndex) => <th key={cellIndex}>{inlineMarkdown(cell)}</th>)}</tr></thead>
+          <tbody>{body.map((row, rowIndex) => <tr key={rowIndex}>{row.map((cell, cellIndex) => <td key={cellIndex}>{inlineMarkdown(cell)}</td>)}</tr>)}</tbody>
+        </table>
+      </div>
+    );
+  }
+  if (block.type === "code") {
+    if (block.language === "mermaid") {
+      return <MermaidDiagram chart={block.code} key={index} />;
+    }
+    return (
+      <div className="code-block" key={index}>
+        {block.language && <span>{block.language}</span>}
+        <pre><code>{block.code}</code></pre>
+      </div>
+    );
+  }
+  return (
+    <p key={index}>
+      {block.lines.map((line, lineIndex) => (
+        <span key={lineIndex}>
+          {inlineMarkdown(line)}
+          {lineIndex < block.lines.length - 1 && <br />}
+        </span>
+      ))}
+    </p>
+  );
+}
+
+export function MarkdownContent({ content, hideTitle = false }: { content: string; hideTitle?: boolean }) {
+  const parsedBlocks = parseMarkdown(content);
+  const titleIndex = hideTitle
+    ? parsedBlocks.findIndex((block) => block.type === "heading" && block.level === 1)
+    : -1;
+  const blocks = parsedBlocks.filter((_, index) => index !== titleIndex);
+
+  const sections: Block[][] = [];
+  for (const block of blocks) {
+    if (block.type === "heading" && block.level === 2) {
+      sections.push([block]);
+    } else if (sections.length) {
+      sections[sections.length - 1].push(block);
+    } else {
+      sections.push([block]);
+    }
+  }
 
   return (
     <article className="markdown-content">
-      {blocks.map((block, index) => {
-        if (block.type === "heading") {
-          const Heading = `h${block.level}` as keyof React.JSX.IntrinsicElements;
-          return <Heading key={index}>{inlineMarkdown(block.text)}</Heading>;
-        }
-        if (block.type === "list") {
-          const List = block.ordered ? "ol" : "ul";
-          return <List key={index}>{block.items.map((item, itemIndex) => <li key={itemIndex}>{inlineMarkdown(item)}</li>)}</List>;
-        }
-        if (block.type === "table") {
-          const [head, ...body] = block.rows;
-          return (
-            <div className="table-scroll" key={index}>
-              <table>
-                <thead><tr>{head.map((cell, cellIndex) => <th key={cellIndex}>{inlineMarkdown(cell)}</th>)}</tr></thead>
-                <tbody>{body.map((row, rowIndex) => <tr key={rowIndex}>{row.map((cell, cellIndex) => <td key={cellIndex}>{inlineMarkdown(cell)}</td>)}</tr>)}</tbody>
-              </table>
-            </div>
-          );
-        }
-        if (block.type === "code") {
-          return (
-            <div className="code-block" key={index}>
-              {block.language && <span>{block.language === "mermaid" ? "Mermaid（図としての表示は未対応）" : block.language}</span>}
-              <pre><code>{block.code}</code></pre>
-            </div>
-          );
-        }
-        return <p key={index}>{block.lines.map((line, lineIndex) => <span key={lineIndex}>{inlineMarkdown(line)}{lineIndex < block.lines.length - 1 && <br />}</span>)}</p>;
+      {sections.map((section, sectionIndex) => {
+        const heading = section[0]?.type === "heading" ? plainText(section[0].text) : "";
+        const className = heading === "今日の到達点"
+          ? "markdown-section is-achievement"
+          : heading === "次回"
+            ? "markdown-section is-next"
+            : "markdown-section";
+
+        return (
+          <section className={className} key={`${heading}-${sectionIndex}`}>
+            {section.map((block, blockIndex) => renderBlock(block, blockIndex))}
+          </section>
+        );
       })}
     </article>
   );
