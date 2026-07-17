@@ -54,6 +54,22 @@ pnpm dev
 
 `.next`はNext.jsの生成物であり、アプリのソースコードではない。削除はサーバー再起動で直らず、ソースと配信bundleの不一致を確認した後に行う。
 
+### 再発原因への対策
+
+同じ現象が再び起きた際、Next.jsの起動ログに、複数のlockfileを検出して`/Users/chikamayasufumi`をworkspace rootとして選んだという警告が出ていた。本来のプロジェクトルートより広い場所をTurbopackが参照していたため、`next.config.ts`でこのリポジトリを`root`として明示した。
+
+```ts
+const nextConfig: NextConfig = {
+  turbopack: {
+    root: __dirname,
+  },
+};
+```
+
+これにより、プロジェクト外のlockfileによるルートの誤推測を防ぐ。設定後は`.next`を再生成し、起動時のworkspace root警告が消えることと、新しいCSS classが配信されることを確認する。
+
+また、`pnpm dev`の起動中に`pnpm build`を並行実行すると、両方が同じ`.next`へ生成物を書き込み、CSSやReact Client Manifestが不整合になることを確認した。build確認を行うときは開発サーバーを止め、build完了後に`pnpm dev`を起動し直す。
+
 ## 再発時の確認手順
 
 1. `git status`と`git rev-parse HEAD`でソースの状態を確認する。
@@ -63,6 +79,8 @@ pnpm dev
 5. 改善しなければブラウザを強制再読み込みする。
 6. それでも直らず、ソースCSSと配信CSSが不一致なら、開発サーバーを停止して`.next`を削除・再生成する。
 7. まだ直らない場合にCSS importやbuild設定を調査する。
+
+このリポジトリでは`next.config.ts`でTurbopackのrootを固定済みなので、起動時にworkspace rootの警告が再び出ていないかも確認する。
 
 最初から`.next`を削除するのではなく、まず影響の小さい開発サーバー再起動から試す。
 
