@@ -1106,6 +1106,90 @@ a {
   text-align: right;
 }
 
+/* Troubleshooting archive */
+
+.troubleshooting-page {
+  max-width: 1080px;
+}
+
+.troubleshooting-heading {
+  border-bottom-color: #e4d8cf;
+}
+
+.troubleshooting-summary {
+  border-left-color: #c46b3c;
+}
+
+.troubleshooting-list {
+  margin-top: 54px;
+  overflow: hidden;
+  border: 1px solid #e3d9d2;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.troubleshooting-row {
+  min-height: 156px;
+  padding: 30px;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 26px;
+  align-items: center;
+  border-bottom: 1px solid #e9dfd8;
+  text-decoration: none;
+}
+
+.troubleshooting-row:last-child {
+  border-bottom: 0;
+}
+
+.troubleshooting-row:hover {
+  background: #fffaf7;
+}
+
+.incident-number {
+  color: #ae6038;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.troubleshooting-row time {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.troubleshooting-row h2 {
+  margin: 8px 0 0;
+  color: var(--ink);
+  font-size: 22px;
+  letter-spacing: -0.03em;
+}
+
+.troubleshooting-row p {
+  margin: 9px 0 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.troubleshooting-detail-header {
+  border-left: 4px solid #c46b3c;
+  padding-left: 26px;
+}
+
+.incident-badge {
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #f8e9df;
+  color: #9f522e;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 @media (max-width: 960px) {
   .learning-hero-dashboard {
     padding: 46px;
@@ -1147,8 +1231,8 @@ a {
   }
 
   .learning-header nav a {
-    padding: 8px 9px;
-    font-size: 12px;
+    padding: 8px 7px;
+    font-size: 11px;
   }
 
   .learning-page,
@@ -1347,6 +1431,12 @@ a {
 
   .log-pagination {
     grid-template-columns: 1fr;
+  }
+
+  .troubleshooting-row {
+    padding: 24px 20px;
+    grid-template-columns: 44px 1fr auto;
+    gap: 14px;
   }
 }
 
