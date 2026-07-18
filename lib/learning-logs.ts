@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { parseFrontmatter } from "@/lib/markdown-frontmatter";
 import {
   isLearningPhaseId,
   type LearningPhaseId,
@@ -18,24 +19,6 @@ export type LearningLog = {
   next: string;
   content: string;
 };
-
-type Frontmatter = Record<string, string>;
-
-function parseFrontmatter(source: string) {
-  const match = source.match(/^---\n([\s\S]*?)\n---\n?/);
-  if (!match) return { attributes: {} as Frontmatter, content: source };
-
-  const attributes = match[1].split("\n").reduce<Frontmatter>((result, line) => {
-    const separator = line.indexOf(":");
-    if (separator === -1) return result;
-    const key = line.slice(0, separator).trim();
-    const value = line.slice(separator + 1).trim().replace(/^['"]|['"]$/g, "");
-    if (key) result[key] = value;
-    return result;
-  }, {});
-
-  return { attributes, content: source.slice(match[0].length) };
-}
 
 function titleFromMarkdown(content: string, date: string) {
   const heading = content.match(/^#\s+(.+)$/m);

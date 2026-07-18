@@ -2,13 +2,17 @@ import Link from "next/link";
 import { formatJapaneseDate, formatLearningPeriod } from "@/lib/learning-format";
 import { getLearningLogs } from "@/lib/learning-logs";
 import { getLearningPhase, getLearningProgress } from "@/lib/learning-roadmap";
+import { getReadings } from "@/lib/readings";
 
 export default async function LearningPage() {
-  const logs = await getLearningLogs();
+  const [logs, readings] = await Promise.all([getLearningLogs(), getReadings()]);
   const latest = logs[0];
   const oldest = logs.at(-1);
   const progress = getLearningProgress(logs);
   const recentLogs = logs.slice(0, 5);
+  const currentPhaseReadings = readings
+    .filter((reading) => reading.phase === progress.currentPhase.id)
+    .slice(0, 3);
 
   return (
     <main className="learning-page">
@@ -85,6 +89,30 @@ export default async function LearningPage() {
               <small>{phase.logCount} / {phase.targetCount} テーマ</small>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="learning-section">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Reading Library</p>
+            <h2>現在のフェーズの教材</h2>
+          </div>
+          <Link href="/learning/readings">すべて見る →</Link>
+        </div>
+        <div className="reading-preview-grid">
+          {currentPhaseReadings.length ? currentPhaseReadings.map((reading) => (
+            <Link href={`/learning/readings/${reading.slug}`} className="reading-preview-card" key={reading.slug}>
+              <div>
+                <span>Reading {reading.order.toString().padStart(2, "0")}</span>
+                <span className="phase-tag">{getLearningPhase(reading.phase).label}</span>
+              </div>
+              <h3>{reading.title}</h3>
+              <p>{reading.summary}</p>
+              <strong>{reading.goal}</strong>
+              <span className="row-arrow" aria-hidden="true">→</span>
+            </Link>
+          )) : <p className="empty-state">このフェーズの教材はまだありません。</p>}
         </div>
       </section>
 
