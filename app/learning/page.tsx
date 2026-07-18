@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LearningHeatmap } from "@/components/learning-heatmap";
 import { formatJapaneseDate, formatLearningPeriod } from "@/lib/learning-format";
 import { getLearningLogs } from "@/lib/learning-logs";
 import { getLearningPhase, getLearningProgress } from "@/lib/learning-roadmap";
@@ -58,6 +59,17 @@ export default async function LearningPage() {
           <strong>{formatLearningPeriod(oldest?.date, latest?.date)}</strong>
           <small>{latest ? `${formatJapaneseDate(latest.date)} 更新` : "まだ記録がありません"}</small>
         </div>
+      </section>
+
+      <section className="learning-section activity-section">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Learning Activity</p>
+            <h2>学習アクティビティ</h2>
+          </div>
+          <p>学習ログを書いた日が色づきます。</p>
+        </div>
+        <LearningHeatmap logs={logs} />
       </section>
 
       <section className="learning-section roadmap-section">

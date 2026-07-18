@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { LogToc } from "@/components/log-toc";
 import { extractMarkdownHeadings, MarkdownContent } from "@/components/markdown-content";
 import { formatJapaneseDate } from "@/lib/learning-format";
 import { getLearningLog, getLearningLogs } from "@/lib/learning-logs";
@@ -38,13 +39,7 @@ export default async function LearningLogPage({ params }: { params: Promise<{ da
       <div className="log-detail-grid">
         <aside className="log-toc">
           <p className="card-label">On this page</p>
-          <nav aria-label="このログの目次">
-            {headings.map((heading) => (
-              <a className={heading.level === 3 ? "is-nested" : ""} href={`#${heading.id}`} key={`${heading.id}-${heading.level}`}>
-                {heading.text}
-              </a>
-            ))}
-          </nav>
+          <LogToc headings={headings} label="このログの目次" />
         </aside>
 
         <div className="log-detail-main">
