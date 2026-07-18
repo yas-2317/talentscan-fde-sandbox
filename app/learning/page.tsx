@@ -2,56 +2,62 @@ import Link from "next/link";
 import { formatJapaneseDate, formatLearningPeriod } from "@/lib/learning-format";
 import { getLearningLogs } from "@/lib/learning-logs";
 import { getLearningPhase, getLearningProgress } from "@/lib/learning-roadmap";
+import { getReadings } from "@/lib/readings";
 
 export default async function LearningPage() {
-  const logs = await getLearningLogs();
+  const [logs, readings] = await Promise.all([getLearningLogs(), getReadings()]);
   const latest = logs[0];
   const oldest = logs.at(-1);
   const progress = getLearningProgress(logs);
   const recentLogs = logs.slice(0, 5);
+  const currentChapterReadings = readings.filter(
+    (reading) => reading.week === progress.currentChapter.week,
+  );
+  const nextReading = readings.find(
+    (reading) => reading.slug === progress.currentLesson?.slug,
+  );
 
   return (
     <main className="learning-page">
       <section className="learning-hero learning-hero-dashboard">
         <div className="hero-copy">
-          <p className="eyebrow">FDE Learning Tracker</p>
+          <p className="eyebrow">FDE Learning Curriculum</p>
           <div className="status-pill">
             <span aria-hidden="true" />
-            {progress.completedPhaseCount}フェーズ完了
+            {progress.completedChapterCount} / 12章 完了
           </div>
-          <h1>次は「{progress.currentPhase.label}」へ。</h1>
+          <h1>次は「{progress.currentChapter.title}」。</h1>
           <p>
-            {latest
-              ? `Day ${latest.day}で「${latest.topic}」まで学習しました。次のテーマは「${latest.next}」です。`
-              : "最初の学習ログを追加すると、ここに現在地が表示されます。"}
+            {progress.completedChapterCount}章を完了しました。Week {progress.currentChapter.week}では、
+            {progress.currentChapter.target}
           </p>
-          {latest && (
-            <Link href={`/learning/logs/${latest.date}`} className="primary-link">
-              最新ログを読む
+          {nextReading && (
+            <Link href={`/learning/readings/${nextReading.slug}`} className="primary-link">
+              Lesson {progress.currentLessonNumber}を始める
               <span aria-hidden="true">→</span>
             </Link>
           )}
         </div>
         <div className="hero-progress-card">
-          <p className="card-label">現在のフェーズ</p>
-          <strong>{progress.currentPhase.order.toString().padStart(2, "0")}</strong>
+          <p className="card-label">現在の章</p>
+          <strong>{progress.currentChapter.week.toString().padStart(2, "0")}</strong>
           <div>
-            <h2>{progress.currentPhase.label}</h2>
-            <p>{progress.currentPhase.description}</p>
+            <h2>Week {progress.currentChapter.week}｜{progress.currentChapter.title}</h2>
+            <p>{progress.currentChapter.target}</p>
           </div>
         </div>
       </section>
 
       <section className="stats-grid" aria-label="学習サマリー">
         <div className="stat-card">
-          <span>学習ログ</span>
-          <strong>{logs.length}</strong>
-          <small>日分の記録</small>
+          <span>今週のLesson</span>
+          <strong>{progress.currentChapter.completedLessonCount}<em> / {progress.currentChapter.totalLessonCount}</em></strong>
+          <small>Week {progress.currentChapter.week}の進捗</small>
         </div>
         <div className="stat-card">
-          <span>進んだフェーズ</span>
-          <strong>{progress.completedPhaseCount}<em> / {progress.phases.length}</em></strong>
-          <small>フェーズ完了</small>
+          <span>完了した章</span>
+          <strong>{progress.completedChapterCount}<em> / 12</em></strong>
+          <small>Week単位の進捗</small>
         </div>
         <div className="stat-card stat-card-wide">
           <span>学習期間</span>
@@ -63,26 +69,26 @@ export default async function LearningPage() {
       <section className="learning-section roadmap-section">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Learning Roadmap</p>
-            <h2>学習ロードマップ</h2>
+            <p className="eyebrow">Three Phases</p>
+            <h2>全体カリキュラム</h2>
           </div>
-          <p>基礎から実装へ、4つのフェーズで進みます。</p>
+          <p>構造理解から個別実装、FDE実践へ進みます。</p>
         </div>
-        <div className="roadmap-grid">
+        <div className="roadmap-grid roadmap-grid-three">
           {progress.phases.map((phase) => (
             <article className={`roadmap-card is-${phase.status}`} key={phase.id}>
               <div className="roadmap-card-top">
-                <span className="roadmap-number">{phase.order.toString().padStart(2, "0")}</span>
+                <span className="roadmap-number">PHASE {phase.order}</span>
                 <span className="roadmap-status">
                   {phase.status === "completed" ? "完了" : phase.status === "current" ? "現在地" : "これから"}
                 </span>
               </div>
               <h3>{phase.label}</h3>
-              <p>{phase.description}</p>
-              <div className="phase-meter" aria-label={`${phase.logCount}/${phase.targetCount}テーマ`}>
-                <span style={{ width: `${Math.min(100, (phase.logCount / phase.targetCount) * 100)}%` }} />
+              <p>{phase.purpose}</p>
+              <div className="phase-meter" aria-label={`${phase.completedChapterCount}/${phase.totalChapterCount}章`}>
+                <span style={{ width: `${Math.min(100, (phase.completedChapterCount / phase.totalChapterCount) * 100)}%` }} />
               </div>
-              <small>{phase.logCount} / {phase.targetCount} テーマ</small>
+              <small>{phase.completedChapterCount} / {phase.totalChapterCount}章・{phase.duration}</small>
             </article>
           ))}
         </div>
@@ -91,13 +97,37 @@ export default async function LearningPage() {
       <section className="learning-section">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Recent Learning</p>
+            <p className="eyebrow">Current Chapter</p>
+            <h2>Week {progress.currentChapter.week}の教材</h2>
+          </div>
+          <Link href="/learning/readings">12章を見る →</Link>
+        </div>
+        <div className="reading-preview-grid">
+          {currentChapterReadings.map((reading) => (
+            <Link href={`/learning/readings/${reading.slug}`} className="reading-preview-card" key={reading.slug}>
+              <div>
+                <span>Lesson {reading.lesson}</span>
+                <span className="phase-tag">{getLearningPhase(reading.phase).label}</span>
+              </div>
+              <h3>{reading.title}</h3>
+              <p>{reading.summary}</p>
+              <strong>{reading.goal}</strong>
+              <span className="row-arrow" aria-hidden="true">→</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="learning-section">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Learning Evidence</p>
             <h2>最近の学習ログ</h2>
           </div>
           <Link href="/learning/logs">すべて見る →</Link>
         </div>
         <div className="recent-log-list">
-          {recentLogs.length ? recentLogs.map((log) => {
+          {recentLogs.map((log) => {
             const phase = getLearningPhase(log.phase);
             return (
               <Link href={`/learning/logs/${log.date}`} className="recent-log-row" key={log.date}>
@@ -110,17 +140,17 @@ export default async function LearningPage() {
                 <span className="row-arrow" aria-hidden="true">→</span>
               </Link>
             );
-          }) : <p className="empty-state">学習ログはまだありません。</p>}
+          })}
         </div>
       </section>
 
       <section className="next-step-panel">
         <div>
           <p className="eyebrow">Up Next</p>
-          <h2>{latest?.next ?? "次のテーマを決める"}</h2>
-          <p>{progress.currentPhase.label}フェーズの学習を始めます。</p>
+          <h2>{progress.currentLesson?.title ?? "次のLessonを決める"}</h2>
+          <p>Week {progress.currentChapter.week}{progress.currentLessonNumber ? `・Lesson ${progress.currentLessonNumber}` : ""}から次の章を学びます。</p>
         </div>
-        <span className="next-step-phase">{progress.currentPhase.shortLabel}</span>
+        <span className="next-step-phase">W{progress.currentChapter.week}</span>
       </section>
     </main>
   );

@@ -4,6 +4,7 @@ import { extractMarkdownHeadings, MarkdownContent } from "@/components/markdown-
 import { formatJapaneseDate } from "@/lib/learning-format";
 import { getLearningLog, getLearningLogs } from "@/lib/learning-logs";
 import { getLearningPhase } from "@/lib/learning-roadmap";
+import { getReadings } from "@/lib/readings";
 
 export async function generateStaticParams() {
   const logs = await getLearningLogs();
@@ -14,12 +15,15 @@ export default async function LearningLogPage({ params }: { params: Promise<{ da
   const { date } = await params;
   const log = await getLearningLog(date);
   if (!log) notFound();
-  const logs = await getLearningLogs();
+  const [logs, readings] = await Promise.all([getLearningLogs(), getReadings()]);
   const currentIndex = logs.findIndex((entry) => entry.date === date);
   const newerLog = currentIndex > 0 ? logs[currentIndex - 1] : null;
   const olderLog = currentIndex >= 0 && currentIndex < logs.length - 1 ? logs[currentIndex + 1] : null;
   const phase = getLearningPhase(log.phase);
   const headings = extractMarkdownHeadings(log.content);
+  const relatedReadings = readings.filter(
+    (reading) => reading.relatedLogs.includes(log.date) || log.completedLessons.includes(reading.slug),
+  );
 
   return (
     <main className="log-detail-page">
@@ -49,6 +53,25 @@ export default async function LearningLogPage({ params }: { params: Promise<{ da
 
         <div className="log-detail-main">
           <MarkdownContent content={log.content} hideTitle />
+
+          {relatedReadings.length > 0 && (
+            <section className="related-reading-panel">
+              <div>
+                <p className="eyebrow">Learning Evidence</p>
+                <h2>このログで進んだLesson</h2>
+                <p>Learning Logを、カリキュラム上の理解と演習の証拠として紐づけています。</p>
+              </div>
+              <div>
+                {relatedReadings.map((reading) => (
+                  <Link href={`/learning/readings/${reading.slug}`} key={reading.slug}>
+                    <span>Week {reading.week}・Lesson {reading.lesson}</span>
+                    <strong>{reading.title}</strong>
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           <nav className="log-pagination" aria-label="前後の学習ログ">
             {olderLog ? (
