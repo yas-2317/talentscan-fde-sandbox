@@ -21,7 +21,9 @@ export default async function LearningLogPage({ params }: { params: Promise<{ da
   const olderLog = currentIndex >= 0 && currentIndex < logs.length - 1 ? logs[currentIndex + 1] : null;
   const phase = getLearningPhase(log.phase);
   const headings = extractMarkdownHeadings(log.content);
-  const relatedReadings = readings.filter((reading) => reading.relatedLogs.includes(log.date));
+  const relatedReadings = readings.filter(
+    (reading) => reading.relatedLogs.includes(log.date) || log.completedLessons.includes(reading.slug),
+  );
 
   return (
     <main className="log-detail-page">
@@ -55,14 +57,14 @@ export default async function LearningLogPage({ params }: { params: Promise<{ da
           {relatedReadings.length > 0 && (
             <section className="related-reading-panel">
               <div>
-                <p className="eyebrow">Related Reading</p>
-                <h2>この学びを教材で読み直す</h2>
-                <p>日々の記録を、再利用できる概念と仕組みとして整理したReadingです。</p>
+                <p className="eyebrow">Learning Evidence</p>
+                <h2>このログで進んだLesson</h2>
+                <p>Learning Logを、カリキュラム上の理解と演習の証拠として紐づけています。</p>
               </div>
               <div>
                 {relatedReadings.map((reading) => (
                   <Link href={`/learning/readings/${reading.slug}`} key={reading.slug}>
-                    <span>Reading {reading.order.toString().padStart(2, "0")}</span>
+                    <span>Week {reading.week}・Lesson {reading.lesson}</span>
                     <strong>{reading.title}</strong>
                     <span aria-hidden="true">→</span>
                   </Link>

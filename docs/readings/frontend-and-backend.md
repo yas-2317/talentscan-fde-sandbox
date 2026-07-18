@@ -1,6 +1,8 @@
 ---
-order: 5
-phase: web-foundation
+order: 4
+week: 1
+lesson: 4
+phase: foundation
 title: フロントエンドとバックエンドの責務境界
 summary: 表示と操作、取得と保存、認証と外部連携をどこへ置くか、TalentScanの例で学ぶ。
 prerequisite: ブラウザ、サーバー、HTTPの基本

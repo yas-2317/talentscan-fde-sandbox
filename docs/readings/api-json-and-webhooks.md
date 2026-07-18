@@ -1,6 +1,8 @@
 ---
-order: 6
-phase: web-foundation
+order: 5
+week: 1
+lesson: 5
+phase: foundation
 title: API・JSON・Webhookによるシステム連携
 summary: バックエンド処理を呼ぶAPI、データを渡すJSON、変化を通知するWebhookを学ぶ。
 prerequisite: HTTPとフロントエンド・バックエンドの役割

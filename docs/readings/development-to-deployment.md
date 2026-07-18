@@ -1,10 +1,12 @@
 ---
-order: 1
-phase: environment
+order: 31
+week: 8
+lesson: 2
+phase: implementation
 title: 開発から公開まで — Next.js・Git・GitHub・Vercel
 summary: Macで編集したコードがlocalhostで動き、GitHubを経由してVercelへ公開される流れを学ぶ。
-prerequisite: 基本的なMac操作とターミナル操作
-prerequisiteReadings:
+prerequisite: Git・GitHub・Pull Requestの基本
+prerequisiteReadings: markdown-learning-hub-and-pull-request
 goal: 編集・確認・記録・共有・公開の各工程を自分の言葉で説明できる。
 relatedLogs: 2026-07-11
 ---

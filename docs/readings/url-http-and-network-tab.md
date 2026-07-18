@@ -1,6 +1,8 @@
 ---
-order: 4
-phase: web-foundation
+order: 3
+week: 1
+lesson: 3
+phase: foundation
 title: URL・HTTP・DevTools Network
 summary: URLを分解し、HTTPのrequestとresponseをブラウザのNetworkタブで確認する方法を学ぶ。
 prerequisite: ブラウザとサーバーの役割

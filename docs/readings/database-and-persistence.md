@@ -1,6 +1,8 @@
 ---
-order: 7
-phase: data-foundation
+order: 6
+week: 1
+lesson: 6
+phase: foundation
 title: DB・永続化・SQLの基礎
 summary: 一時的なメモリと永続化するDBを区別し、行・列からJSONを経て画面へ届く流れを学ぶ。
 prerequisite: バックエンド、API、JSONの基本

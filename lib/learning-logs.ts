@@ -17,8 +17,15 @@ export type LearningLog = {
   title: string;
   summary: string;
   next: string;
+  completedLessons: string[];
   content: string;
 };
+
+function splitList(value?: string) {
+  return value
+    ? value.split(",").map((item) => item.trim()).filter(Boolean)
+    : [];
+}
 
 function titleFromMarkdown(content: string, date: string) {
   const heading = content.match(/^#\s+(.+)$/m);
@@ -65,7 +72,7 @@ export async function getLearningLog(date: string): Promise<LearningLog | null> 
     const title = attributes.topic || titleFromMarkdown(content, date);
     const phase = isLearningPhaseId(attributes.phase)
       ? attributes.phase
-      : "environment";
+      : "foundation";
 
     return {
       date,
@@ -75,6 +82,7 @@ export async function getLearningLog(date: string): Promise<LearningLog | null> 
       title,
       summary: attributes.summary || summaryFromMarkdown(content),
       next: attributes.next || nextFromMarkdown(content),
+      completedLessons: splitList(attributes.completedLessons),
       content,
     };
   } catch (error) {

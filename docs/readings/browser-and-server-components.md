@@ -1,10 +1,12 @@
 ---
-order: 3
-phase: web-foundation
+order: 2
+week: 1
+lesson: 2
+phase: foundation
 title: ブラウザからServer Componentまで
 summary: ブラウザのrequestをNext.jsが処理し、JSXの結果が画面として届くまでを学ぶ。
-prerequisite: Next.jsプロジェクトとページファイルの基本
-prerequisiteReadings: development-to-deployment, markdown-learning-hub-and-pull-request
+prerequisite: Webシステムを構成する要素の全体像
+prerequisiteReadings: web-system-overview
 goal: requestから表示までを説明し、ServerとClient Componentの役割を区別できる。
 relatedLogs: 2026-07-13
 ---

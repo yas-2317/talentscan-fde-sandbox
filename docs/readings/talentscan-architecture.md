@@ -1,6 +1,8 @@
 ---
-order: 8
-phase: data-foundation
+order: 7
+week: 1
+lesson: 7
+phase: foundation
 title: TalentScanアーキテクチャ入門
 summary: ブラウザ、フロントエンド、API、バックエンド、DB、JSON、Bedrockを二つのデータフローで統合する。
 prerequisite: Web基礎とデータ基礎のReading 3〜7

@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { extractMarkdownHeadings, MarkdownContent } from "@/components/markdown-content";
 import { formatJapaneseDate } from "@/lib/learning-format";
+import { getCurriculumChapter } from "@/lib/learning-curriculum";
 import { getLearningLogs } from "@/lib/learning-logs";
-import { getLearningPhase } from "@/lib/learning-roadmap";
+import { getLearningPhase, getLearningProgress } from "@/lib/learning-roadmap";
 import { getReading, getReadings } from "@/lib/readings";
 
 export async function generateStaticParams() {
@@ -23,22 +24,27 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
     ? readings[currentIndex + 1]
     : null;
   const phase = getLearningPhase(reading.phase);
+  const chapter = getCurriculumChapter(reading.week);
+  const progress = getLearningProgress(logs);
+  const completed = progress.completedLessons.has(reading.slug);
+  const current = progress.currentLesson?.slug === reading.slug;
   const headings = extractMarkdownHeadings(reading.content);
-  const relatedLogs = reading.relatedLogs
-    .map((date) => logs.find((log) => log.date === date))
-    .filter((log) => log !== undefined);
+  const completionLogs = logs.filter((log) => log.completedLessons.includes(reading.slug));
   const prerequisiteReadings = reading.prerequisiteReadings
     .map((prerequisiteSlug) => readings.find((entry) => entry.slug === prerequisiteSlug))
     .filter((entry) => entry !== undefined);
 
   return (
     <main className="log-detail-page reading-detail-page">
-      <Link href="/learning/readings" className="back-link">← 教材一覧へ</Link>
+      <Link href="/learning/readings" className="back-link">← 12章のカリキュラムへ</Link>
 
       <header className="log-detail-header reading-detail-header">
         <div className="detail-meta-row">
-          <span className="reading-badge">Reading {reading.order.toString().padStart(2, "0")}</span>
+          <span className="reading-badge">Week {reading.week}・Lesson {reading.lesson}</span>
           <span className="phase-tag">{phase.label}</span>
+          <span className={`lesson-status is-${completed ? "completed" : current ? "current" : "available"}`}>
+            {completed ? "完了" : current ? "次に学ぶ" : "教材公開済み"}
+          </span>
         </div>
         <h1>{reading.title}</h1>
         <p>{reading.summary}</p>
@@ -46,35 +52,43 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
 
       <section className="reading-meta-panel" aria-label="教材の概要">
         <div>
-          <span>前提知識</span>
+          <span>前提Lesson</span>
           <strong>{reading.prerequisite}</strong>
           {prerequisiteReadings.length > 0 && (
             <div className="reading-meta-links">
               {prerequisiteReadings.map((entry) => (
                 <Link href={`/learning/readings/${entry.slug}`} key={entry.slug}>
-                  Reading {entry.order.toString().padStart(2, "0")} →
+                  W{entry.week} L{entry.lesson} →
                 </Link>
               ))}
             </div>
           )}
         </div>
         <div>
-          <span>到達目標</span>
+          <span>このLessonの到達目標</span>
           <strong>{reading.goal}</strong>
         </div>
         <div>
-          <span>対応するLearning Log</span>
-          {relatedLogs.length ? relatedLogs.map((log) => (
+          <span>学習証拠</span>
+          {completionLogs.length ? completionLogs.map((log) => (
             <Link href={`/learning/logs/${log.date}`} key={log.date}>
               Day {log.day}・{formatJapaneseDate(log.date)} →
             </Link>
-          )) : <strong>関連ログなし</strong>}
+          )) : <strong>Lesson完了後にLearning Logへ記録</strong>}
         </div>
       </section>
 
+      <div className="chapter-context-panel">
+        <span>Chapter {reading.week.toString().padStart(2, "0")}</span>
+        <div>
+          <strong>{chapter?.title}</strong>
+          <p>{chapter?.target}</p>
+        </div>
+      </div>
+
       <div className="log-detail-grid">
         <aside className="log-toc">
-          <p className="card-label">On this page</p>
+          <p className="card-label">On this Lesson</p>
           <nav aria-label="この教材の目次">
             {headings.map((heading) => (
               <a className={heading.level === 3 ? "is-nested" : ""} href={`#${heading.id}`} key={`${heading.id}-${heading.level}`}>
@@ -91,13 +105,13 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
             {previousReading ? (
               <Link href={`/learning/readings/${previousReading.slug}`}>
                 <span>← 前の教材</span>
-                <strong>Reading {previousReading.order.toString().padStart(2, "0")}｜{previousReading.title}</strong>
+                <strong>W{previousReading.week} L{previousReading.lesson}｜{previousReading.title}</strong>
               </Link>
             ) : <span />}
             {nextReading ? (
               <Link href={`/learning/readings/${nextReading.slug}`} className="is-next-link">
                 <span>次の教材 →</span>
-                <strong>Reading {nextReading.order.toString().padStart(2, "0")}｜{nextReading.title}</strong>
+                <strong>W{nextReading.week} L{nextReading.lesson}｜{nextReading.title}</strong>
               </Link>
             ) : <span />}
           </nav>

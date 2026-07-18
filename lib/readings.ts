@@ -2,9 +2,9 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { parseFrontmatter } from "@/lib/markdown-frontmatter";
 import {
-  isLearningPhaseId,
-  type LearningPhaseId,
-} from "@/lib/learning-roadmap";
+  getCurriculumLesson,
+  type CurriculumPhaseId,
+} from "@/lib/learning-curriculum";
 
 const readingsDirectory = path.join(process.cwd(), "docs", "readings");
 const readingFilePattern = /^([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/;
@@ -12,7 +12,9 @@ const readingFilePattern = /^([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/;
 export type Reading = {
   slug: string;
   order: number;
-  phase: LearningPhaseId;
+  week: number;
+  lesson: number;
+  phase: CurriculumPhaseId;
   title: string;
   summary: string;
   prerequisite: string;
@@ -42,7 +44,7 @@ export async function getReadings(): Promise<Reading[]> {
   return Promise.all(slugs.map((slug) => getReading(slug))).then((readings) =>
     readings
       .filter((reading): reading is Reading => reading !== null)
-      .sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug)),
+      .sort((a, b) => a.week - b.week || a.lesson - b.lesson || a.slug.localeCompare(b.slug)),
   );
 }
 
@@ -52,14 +54,15 @@ export async function getReading(slug: string): Promise<Reading | null> {
   try {
     const source = await fs.readFile(path.join(readingsDirectory, `${slug}.md`), "utf8");
     const { attributes, content } = parseFrontmatter(source);
-    const phase = isLearningPhaseId(attributes.phase)
-      ? attributes.phase
-      : "environment";
+    const curriculumLesson = getCurriculumLesson(slug);
+    if (!curriculumLesson) return null;
 
     return {
       slug,
       order: Number(attributes.order) || 1,
-      phase,
+      week: curriculumLesson.chapter.week,
+      lesson: curriculumLesson.lessonNumber,
+      phase: curriculumLesson.chapter.phase,
       title: attributes.title || titleFromMarkdown(content),
       summary: attributes.summary || "FDE学習を支える教材。",
       prerequisite: attributes.prerequisite || "特になし",
