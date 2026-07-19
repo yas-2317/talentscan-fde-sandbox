@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BackToTop } from "@/components/back-to-top";
 
 export default function LearningLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,6 +20,7 @@ export default function LearningLayout({ children }: { children: React.ReactNode
         </nav>
       </header>
       {children}
+      <BackToTop />
     </div>
   );
 }
