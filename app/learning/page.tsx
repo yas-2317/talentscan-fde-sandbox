@@ -27,10 +27,9 @@ export default async function LearningPage() {
             <span aria-hidden="true" />
             {progress.completedChapterCount} / 12章 完了
           </div>
-          <h1>次は「{progress.currentChapter.title}」。</h1>
+          <h1>次は「{progress.currentChapter.title}」へ</h1>
           <p>
-            {progress.completedChapterCount}章を完了しました。Week {progress.currentChapter.week}では、
-            {progress.currentChapter.target}
+            {progress.completedChapterCount}章まで完了しました。Week {progress.currentChapter.week}の到達目標:「{progress.currentChapter.target}」
           </p>
           {nextReading && (
             <Link href={`/learning/readings/${nextReading.slug}`} className="primary-link">
@@ -73,7 +72,7 @@ export default async function LearningPage() {
             <p className="eyebrow">Three Phases</p>
             <h2>全体カリキュラム</h2>
           </div>
-          <p>基礎理解から候補者管理の縦実装、FDEデリバリーへ進みます。</p>
+          <p>基礎理解から始め、候補者管理機能の実装を経て、FDEデリバリーの実践へ進みます。</p>
         </div>
         <div className="roadmap-grid roadmap-grid-three">
           {progress.phases.map((phase) => (
@@ -81,7 +80,7 @@ export default async function LearningPage() {
               <div className="roadmap-card-top">
                 <span className="roadmap-number">PHASE {phase.order}</span>
                 <span className="roadmap-status">
-                  {phase.status === "completed" ? "完了" : phase.status === "current" ? "現在地" : "これから"}
+                  {phase.status === "completed" ? "完了" : phase.status === "current" ? "学習中" : "未着手"}
                 </span>
               </div>
               <h3>{phase.label}</h3>
@@ -101,7 +100,7 @@ export default async function LearningPage() {
             <p className="eyebrow">Cross-cutting Themes</p>
             <h2>全Weekで実践すること</h2>
           </div>
-          <p>一度だけ学ぶ章ではなく、毎回の実装と検証に組み込みます。</p>
+          <p>特定の章として一度だけ学ぶのではなく、毎週の実装と検証に組み込んで実践します。</p>
         </div>
         <div className="cross-cutting-grid">
           {curriculumCrossCuttingThemes.map((theme) => (
@@ -123,7 +122,7 @@ export default async function LearningPage() {
             <p className="eyebrow">Current Chapter</p>
             <h2>Week {progress.currentChapter.week}の教材</h2>
           </div>
-          <Link href="/learning/readings">12章を見る →</Link>
+          <Link href="/learning/readings">全12章を見る →</Link>
         </div>
         <div className="reading-preview-grid">
           {currentChapterReadings.map((reading) => (
@@ -171,7 +170,7 @@ export default async function LearningPage() {
         <div>
           <p className="eyebrow">Up Next</p>
           <h2>{progress.currentLesson?.title ?? "次のLessonを決める"}</h2>
-          <p>Week {progress.currentChapter.week}{progress.currentLessonNumber ? `・Lesson ${progress.currentLessonNumber}` : ""}から次の章を学びます。</p>
+          <p>Week {progress.currentChapter.week}{progress.currentLessonNumber ? `・Lesson ${progress.currentLessonNumber}` : ""}から学習を再開します。</p>
         </div>
         <span className="next-step-phase">W{progress.currentChapter.week}</span>
       </section>

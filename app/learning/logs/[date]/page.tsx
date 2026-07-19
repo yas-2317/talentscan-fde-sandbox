@@ -59,7 +59,7 @@ export default async function LearningLogPage({ params }: { params: Promise<{ da
               <div>
                 <p className="eyebrow">Learning Evidence</p>
                 <h2>このログで進んだLesson</h2>
-                <p>Learning Logを、カリキュラム上の理解と演習の証拠として紐づけています。</p>
+                <p>この学習ログは、カリキュラムの理解と演習の記録としてLessonに紐づいています。</p>
               </div>
               <div>
                 {relatedReadings.map((reading) => (

@@ -11,7 +11,7 @@ export default async function TroubleshootingLogsPage() {
         <div>
           <p className="eyebrow">Troubleshooting Archive</p>
           <h1>実践トラブルログ</h1>
-          <p>開発中に実際に起きた問題を、症状・原因・証拠・解決手順で振り返る記録です。</p>
+          <p>開発中に実際に起きた問題を、症状・原因・調査記録・解決手順の形で振り返る記録です。</p>
         </div>
         <div className="archive-summary troubleshooting-summary">
           <strong>{logs.length}</strong>

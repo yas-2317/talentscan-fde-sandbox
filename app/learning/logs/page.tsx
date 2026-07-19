@@ -17,7 +17,7 @@ export default async function LearningLogsPage() {
         <div>
           <p className="eyebrow">Learning Archive</p>
           <h1>学習ログ</h1>
-          <p>学んだことを日ごとに積み重ね、あとから仕組みまで振り返れる記録です。</p>
+          <p>学んだ内容を1日ごとに記録し、理解した仕組みをあとから振り返れるアーカイブです。</p>
         </div>
         <div className="archive-summary">
           <strong>{logs.length}</strong>
