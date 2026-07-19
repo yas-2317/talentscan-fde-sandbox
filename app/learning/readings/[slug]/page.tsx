@@ -49,7 +49,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
           </span>
           {phase && <span className="phase-tag">{phase.label}</span>}
           <span className={`lesson-status is-${isReference ? "reference" : completed ? "completed" : current ? "current" : "available"}`}>
-            {isReference ? "横断参照" : completed ? "完了" : current ? "次に学ぶ" : "教材公開済み"}
+            {isReference ? "参照資料" : completed ? "完了" : current ? "次に学ぶ" : "教材公開済み"}
           </span>
         </div>
         <h1>{reading.title}</h1>
@@ -75,7 +75,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
           <strong>{reading.goal}</strong>
         </div>
         <div>
-          <span>学習証拠</span>
+          <span>学習記録</span>
           {evidenceLogs.length ? evidenceLogs.map((log) => (
             <Link href={`/learning/logs/${log.date}`} key={log.date}>
               Day {log.day}・{formatJapaneseDate(log.date)} →

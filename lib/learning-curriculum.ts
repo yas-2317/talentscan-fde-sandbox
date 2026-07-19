@@ -62,7 +62,7 @@ export const curriculumPhases: CurriculumPhase[] = [
     label: "候補者管理アプリ実装",
     shortLabel: "実装",
     duration: "5週間",
-    purpose: "候補者管理の機能を、画面・API・DBまで縦につないで実装できる。",
+    purpose: "候補者管理の機能を、画面・API・DBまで一気通貫で実装できる。",
     weeks: [3, 4, 5, 6, 7],
   },
   {
@@ -112,7 +112,7 @@ export const curriculumChapters: CurriculumChapter[] = [
   {
     week: 3,
     phase: "implementation",
-    title: "候補者一覧を縦に実装",
+    title: "候補者一覧を一気通貫で実装",
     purpose: "候補者一覧を題材に、DB・API・画面を一つの流れとしてつなぐ。",
     target: "一覧取得のデータフローを説明し、表示と例外処理まで実装できる。",
     lessons: [],
@@ -121,7 +121,7 @@ export const curriculumChapters: CurriculumChapter[] = [
   {
     week: 4,
     phase: "implementation",
-    title: "候補者詳細・編集を縦に実装",
+    title: "候補者詳細・編集を一気通貫で実装",
     purpose: "候補者詳細の取得と編集を、画面からDB更新まで通して作る。",
     target: "入力を検証し、安全に更新して結果を画面へ返せる。",
     lessons: [],
@@ -130,7 +130,7 @@ export const curriculumChapters: CurriculumChapter[] = [
   {
     week: 5,
     phase: "implementation",
-    title: "面接回答・評価準備を縦に実装",
+    title: "面接回答・評価準備を一気通貫で実装",
     purpose: "面接回答と評価ステータスを、業務データとして保存できる形にする。",
     target: "回答入力から保存、評価待ち状態までの一連の処理を実装できる。",
     lessons: [],
@@ -139,7 +139,7 @@ export const curriculumChapters: CurriculumChapter[] = [
   {
     week: 6,
     phase: "implementation",
-    title: "AI評価生成・保存を縦に実装",
+    title: "AI評価生成・保存を一気通貫で実装",
     purpose: "AI推論を評価処理へ組み込み、検証可能な業務データとして保存する。",
     target: "AI評価を生成し、検証・保存・再利用できる。",
     lessons: [],
@@ -148,7 +148,7 @@ export const curriculumChapters: CurriculumChapter[] = [
   {
     week: 7,
     phase: "implementation",
-    title: "ATS連携と権限境界を縦に実装",
+    title: "ATS連携と権限境界を一気通貫で実装",
     purpose: "外部ATSとのデータ連携と、利用者・組織ごとの安全な境界を作る。",
     target: "連携の失敗や再送を考慮し、誰が何を実行・閲覧できるか実装できる。",
     lessons: [],
@@ -158,7 +158,7 @@ export const curriculumChapters: CurriculumChapter[] = [
     week: 8,
     phase: "fde-practice",
     title: "要件定義",
-    purpose: "顧客の言葉から業務とシステムの要件を取り出す。",
+    purpose: "顧客の言葉から業務とシステムの要件を引き出し、整理する。",
     target: "利用者、入出力、業務ルール、例外、非機能要件を整理できる。",
     lessons: [],
     topics: ["現行業務・課題・利用者・use case", "入力・出力・業務ルール・例外", "非機能要件・制約", "FDEとして確認する問い"],
@@ -176,7 +176,7 @@ export const curriculumChapters: CurriculumChapter[] = [
     week: 10,
     phase: "fde-practice",
     title: "顧客別実装・検証",
-    purpose: "設計を小さな実装へ落とし、顧客と早く検証して修正する。",
+    purpose: "設計を小さな実装に落とし込み、顧客とすばやく検証・修正する。",
     target: "設定とコード変更を判断し、受け入れ条件に沿って機能を検証できる。",
     lessons: [],
     topics: ["AI BPR prototype・業務検証", "共通機能・個社設定・code変更", "ATS・評価基準・通知", "受け入れ条件・test・feedback"],
@@ -195,7 +195,7 @@ export const curriculumChapters: CurriculumChapter[] = [
     phase: "fde-practice",
     title: "運用・改善",
     purpose: "本番データと利用者の声から、業務とシステムを継続的に改善する。",
-    target: "障害対応と効果測定を行い、次の改善を要件へ戻せる。",
+    target: "障害対応と効果測定を行い、その結果を次の改善要件につなげられる。",
     lessons: [],
     topics: ["monitoring・log・alert", "incident・復旧・再発防止", "業務KPI・AI品質・利用状況", "feedback・改善backlog・総合振り返り"],
   },
@@ -205,7 +205,7 @@ export const curriculumCrossCuttingThemes: CurriculumCrossCuttingTheme[] = [
   {
     id: "git-delivery",
     title: "Git・デリバリー",
-    description: "各Weekの成果を、小さく安全に共有して戻せる状態にする。",
+    description: "各Weekの成果を小さな単位で安全に共有し、問題があればすぐ差し戻せる状態を保つ。",
     practices: ["branch・commit", "Pull Request・review", "build・release evidence"],
   },
   {
@@ -217,7 +217,7 @@ export const curriculumCrossCuttingThemes: CurriculumCrossCuttingTheme[] = [
   {
     id: "debugging",
     title: "デバッグ・可観測性",
-    description: "再現条件と証拠を集め、仮説を検証して復旧まで記録する。",
+    description: "再現条件と手がかりを集め、仮説を検証して復旧まで記録する。",
     practices: ["再現・切り分け", "Network・log・error", "復旧・再発防止"],
   },
 ];
@@ -239,7 +239,7 @@ export const curriculumReferences: CurriculumReference[] = [
   },
   {
     title: "実践トラブルシューティングログ",
-    description: "実際の症状、原因、証拠、復旧手順を横断的に参照する。",
+    description: "実際の症状、原因、調査記録、復旧手順を横断的に参照する。",
     category: "デバッグ・可観測性",
     href: "/learning/troubleshooting",
   },

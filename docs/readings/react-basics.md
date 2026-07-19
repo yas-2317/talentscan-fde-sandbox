@@ -13,7 +13,7 @@ relatedLogs:
 
 # Reactのコンポーネント・props・stateを読む
 
-## このLessonで解けるようになる問い
+## このLessonで答えられるようになる問い
 
 - React componentは通常の関数と何が違うのか。
 - propsとstateは、どちらもデータなのになぜ分けるのか。

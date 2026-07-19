@@ -11,8 +11,8 @@ import { getReadings } from "@/lib/readings";
 
 function statusLabel(status: "completed" | "current" | "upcoming") {
   if (status === "completed") return "完了";
-  if (status === "current") return "現在地";
-  return "これから";
+  if (status === "current") return "学習中";
+  return "未着手";
 }
 
 export default async function ReadingsPage() {
@@ -28,12 +28,12 @@ export default async function ReadingsPage() {
         <div>
           <p className="eyebrow">FDE Curriculum</p>
           <h1>教材</h1>
-          <p>12 Weekを順に進め、Git・セキュリティ・デバッグは全期間の実践へ組み込みます。</p>
+          <p>全12 Weekを順に進めます。Git・セキュリティ・デバッグは全期間を通じて実践します。</p>
         </div>
         <div className="archive-summary reading-summary">
           <strong>12</strong>
           <span>Weekのカリキュラム</span>
-          <small>{curriculumPhases.length}フェーズ・{lessonCount}必須教材を公開中</small>
+          <small>{curriculumPhases.length}フェーズ・必須教材{lessonCount}本を公開中</small>
         </div>
       </header>
 
@@ -43,7 +43,7 @@ export default async function ReadingsPage() {
             <span>CROSS-CUTTING</span>
             <h2>全Weekの横断テーマ</h2>
           </div>
-          <p>独立した必須章ではなく、各Weekの成果物と判断に繰り返し適用します。</p>
+          <p>独立した章としてではなく、毎週の成果物づくりと意思決定のなかで繰り返し実践します。</p>
         </div>
         <div className="cross-cutting-grid">
           {curriculumCrossCuttingThemes.map((theme) => (
@@ -100,7 +100,7 @@ export default async function ReadingsPage() {
                               <span className="lesson-number">Lesson {(lessonIndex + 1).toString().padStart(2, "0")}</span>
                               <div>
                                 <strong>{lesson.title}</strong>
-                                <small>{completed ? "完了" : current ? "次に学ぶ" : reading ? "教材公開済み" : "今後作成"}</small>
+                                <small>{completed ? "完了" : current ? "次に学ぶ" : reading ? "教材公開済み" : "作成予定"}</small>
                               </div>
                               <span aria-hidden="true">{reading ? "→" : "—"}</span>
                             </>
@@ -115,7 +115,7 @@ export default async function ReadingsPage() {
                           );
                         }) : (
                           <div className="curriculum-topic-list">
-                            <span>Lesson構成は、この章を開始する前に到達目標から設計します</span>
+                            <span>この章のLesson構成は、開始前に到達目標をもとに設計します</span>
                             {chapter.topics.map((topic) => <p key={topic}>{topic}</p>)}
                           </div>
                         )}
@@ -133,7 +133,7 @@ export default async function ReadingsPage() {
         <div className="reading-phase-heading">
           <div>
             <span>REFERENCE LIBRARY</span>
-            <h2>必要なときに引く資料</h2>
+            <h2>必要なときに参照する資料</h2>
           </div>
           <p>Referenceは横断テーマを支える参照資料です。必須Lessonの完了判定には含めません。</p>
         </div>

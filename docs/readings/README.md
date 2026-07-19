@@ -7,7 +7,7 @@ Curriculum → Week → 必須Lesson → Exercise → Learning Log
                     ↘ Reference（横断参照）
 ```
 
-Learning Logは教材の元原稿ではなく、Lessonの理解と演習結果を記録する進捗データとして扱う。Referenceの閲覧は必須Lessonの完了判定へ含めない。
+Learning Logは教材の元原稿ではなく、Lessonの理解と演習結果を記録する進捗データとして扱う。Referenceの閲覧は必須Lessonの完了判定には含めない。
 
 Git、セキュリティ、デバッグは特定Weekだけで完結させず、全Weekで実践する横断テーマとする。正式なWeek、Lesson、横断テーマ、Referenceの登録は`lib/learning-curriculum.ts`を正とする。
 
@@ -55,7 +55,7 @@ relatedLogs:
 
 ## 各必須Lessonの構成
 
-1. このLessonで解けるようになる問い
+1. このLessonで答えられるようになる問い
 2. なぜFDEに必要か
 3. 基本概念
 4. システム内部で実際に起きること
