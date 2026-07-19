@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { curriculumChapters, curriculumPhases } from "@/lib/learning-curriculum";
+import {
+  curriculumChapters,
+  curriculumCrossCuttingThemes,
+  curriculumPhases,
+  curriculumReferences,
+} from "@/lib/learning-curriculum";
 import { getLearningLogs } from "@/lib/learning-logs";
 import { getLearningProgress } from "@/lib/learning-roadmap";
 import { getReadings } from "@/lib/readings";
@@ -13,6 +18,7 @@ function statusLabel(status: "completed" | "current" | "upcoming") {
 export default async function ReadingsPage() {
   const [readings, logs] = await Promise.all([getReadings(), getLearningLogs()]);
   const readingBySlug = new Map(readings.map((reading) => [reading.slug, reading]));
+  const lessonCount = readings.filter((reading) => reading.kind === "lesson").length;
   const progress = getLearningProgress(logs);
   const progressByWeek = new Map(progress.chapters.map((chapter) => [chapter.week, chapter]));
 
@@ -22,14 +28,36 @@ export default async function ReadingsPage() {
         <div>
           <p className="eyebrow">FDE Curriculum</p>
           <h1>教材</h1>
-          <p>12章を正式カリキュラムのWeekと対応させ、各章を必要なLessonに分けて学びます。</p>
+          <p>12 Weekを順に進め、Git・セキュリティ・デバッグは全期間の実践へ組み込みます。</p>
         </div>
         <div className="archive-summary reading-summary">
           <strong>12</strong>
-          <span>章のカリキュラム</span>
-          <small>{curriculumPhases.length}フェーズ・{readings.length}教材を公開中</small>
+          <span>Weekのカリキュラム</span>
+          <small>{curriculumPhases.length}フェーズ・{lessonCount}必須教材を公開中</small>
         </div>
       </header>
+
+      <section className="curriculum-theme-section">
+        <div className="reading-phase-heading">
+          <div>
+            <span>CROSS-CUTTING</span>
+            <h2>全Weekの横断テーマ</h2>
+          </div>
+          <p>独立した必須章ではなく、各Weekの成果物と判断に繰り返し適用します。</p>
+        </div>
+        <div className="cross-cutting-grid">
+          {curriculumCrossCuttingThemes.map((theme) => (
+            <article className="cross-cutting-card" key={theme.id}>
+              <span>Week 1〜12</span>
+              <h3>{theme.title}</h3>
+              <p>{theme.description}</p>
+              <ul>
+                {theme.practices.map((practice) => <li key={practice}>{practice}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <div className="curriculum-phases">
         {curriculumPhases.map((phase) => {
@@ -100,6 +128,26 @@ export default async function ReadingsPage() {
           );
         })}
       </div>
+
+      <section className="reference-library">
+        <div className="reading-phase-heading">
+          <div>
+            <span>REFERENCE LIBRARY</span>
+            <h2>必要なときに引く資料</h2>
+          </div>
+          <p>Referenceは横断テーマを支える参照資料です。必須Lessonの完了判定には含めません。</p>
+        </div>
+        <div className="reference-grid">
+          {curriculumReferences.map((reference) => (
+            <Link href={reference.href} className="reference-card" key={reference.href}>
+              <span>{reference.category}</span>
+              <h3>{reference.title}</h3>
+              <p>{reference.description}</p>
+              <strong>資料を開く →</strong>
+            </Link>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

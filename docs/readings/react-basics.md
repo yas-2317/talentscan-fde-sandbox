@@ -1,7 +1,7 @@
 ---
-order: 10
+order: 11
 week: 2
-lesson: 3
+lesson: 4
 phase: foundation
 title: Reactのコンポーネント・props・stateを読む
 summary: 画面を部品へ分け、データと操作によって表示が変わる仕組みを候補者一覧で理解する。

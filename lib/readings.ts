@@ -3,6 +3,7 @@ import path from "node:path";
 import { parseFrontmatter } from "@/lib/markdown-frontmatter";
 import {
   getCurriculumLesson,
+  getCurriculumReference,
   type CurriculumPhaseId,
 } from "@/lib/learning-curriculum";
 
@@ -12,9 +13,10 @@ const readingFilePattern = /^([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/;
 export type Reading = {
   slug: string;
   order: number;
-  week: number;
-  lesson: number;
-  phase: CurriculumPhaseId;
+  kind: "lesson" | "reference";
+  week: number | null;
+  lesson: number | null;
+  phase: CurriculumPhaseId | null;
   title: string;
   summary: string;
   prerequisite: string;
@@ -44,7 +46,13 @@ export async function getReadings(): Promise<Reading[]> {
   return Promise.all(slugs.map((slug) => getReading(slug))).then((readings) =>
     readings
       .filter((reading): reading is Reading => reading !== null)
-      .sort((a, b) => a.week - b.week || a.lesson - b.lesson || a.slug.localeCompare(b.slug)),
+      .sort((a, b) => {
+        if (a.kind !== b.kind) return a.kind === "lesson" ? -1 : 1;
+        if (a.kind === "reference") return a.order - b.order || a.slug.localeCompare(b.slug);
+        return (a.week ?? 0) - (b.week ?? 0)
+          || (a.lesson ?? 0) - (b.lesson ?? 0)
+          || a.slug.localeCompare(b.slug);
+      }),
   );
 }
 
@@ -55,14 +63,16 @@ export async function getReading(slug: string): Promise<Reading | null> {
     const source = await fs.readFile(path.join(readingsDirectory, `${slug}.md`), "utf8");
     const { attributes, content } = parseFrontmatter(source);
     const curriculumLesson = getCurriculumLesson(slug);
-    if (!curriculumLesson) return null;
+    const curriculumReference = getCurriculumReference(slug);
+    if (!curriculumLesson && !curriculumReference) return null;
 
     return {
       slug,
       order: Number(attributes.order) || 1,
-      week: curriculumLesson.chapter.week,
-      lesson: curriculumLesson.lessonNumber,
-      phase: curriculumLesson.chapter.phase,
+      kind: curriculumLesson ? "lesson" : "reference",
+      week: curriculumLesson?.chapter.week ?? null,
+      lesson: curriculumLesson?.lessonNumber ?? null,
+      phase: curriculumLesson?.chapter.phase ?? null,
       title: attributes.title || titleFromMarkdown(content),
       summary: attributes.summary || "FDE学習を支える教材。",
       prerequisite: attributes.prerequisite || "特になし",

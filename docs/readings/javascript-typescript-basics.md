@@ -1,7 +1,7 @@
 ---
-order: 9
+order: 10
 week: 2
-lesson: 2
+lesson: 3
 phase: foundation
 title: JavaScript／TypeScriptの値と処理を読む
 summary: 変数、型、配列、オブジェクト、関数、条件分岐、繰り返し、async／awaitをデータ処理として読む。

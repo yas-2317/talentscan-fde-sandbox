@@ -1,12 +1,12 @@
 ---
-order: 8
+order: 9
 week: 2
-lesson: 1
+lesson: 2
 phase: foundation
 title: ファイルとディレクトリから処理の場所を探す
 summary: app、components、lib、public、docs、設定ファイルの役割とimport／exportを、現在のリポジトリで追う。
-prerequisite: Week 1のWebアプリ全体像
-prerequisiteReadings: talentscan-architecture
+prerequisite: OS・ターミナル・プロセスの基本
+prerequisiteReadings: os-terminal-processes
 goal: 既存コードから画面、共通部品、データ読込、教材、設定の場所を探せる。
 relatedLogs: 2026-07-11, 2026-07-12
 ---

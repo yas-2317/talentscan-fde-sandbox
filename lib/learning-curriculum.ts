@@ -31,33 +31,48 @@ export type CurriculumPhase = {
   weeks: readonly number[];
 };
 
+export type CurriculumCrossCuttingTheme = {
+  id: string;
+  title: string;
+  description: string;
+  practices: string[];
+};
+
+export type CurriculumReference = {
+  slug?: string;
+  title: string;
+  description: string;
+  category: string;
+  href: string;
+};
+
 export const curriculumPhases: CurriculumPhase[] = [
   {
     id: "foundation",
     order: 1,
-    label: "基礎構造",
+    label: "基礎理解",
     shortLabel: "基礎",
     duration: "1〜2週間",
-    purpose: "Webアプリの裏側で何が起きているか説明できる。",
+    purpose: "Webアプリの構造と、コードが動く土台を説明できる。",
     weeks: [1, 2],
   },
   {
     id: "implementation",
     order: 2,
-    label: "技術要素の実装",
+    label: "候補者管理アプリ実装",
     shortLabel: "実装",
-    duration: "4〜6週間",
-    purpose: "フロント・API・DB・AI連携を自分で変更できる。",
-    weeks: [3, 4, 5, 6, 7, 8],
+    duration: "5週間",
+    purpose: "候補者管理の機能を、画面・API・DBまで縦につないで実装できる。",
+    weeks: [3, 4, 5, 6, 7],
   },
   {
     id: "fde-practice",
     order: 3,
-    label: "FDE実践",
+    label: "FDEデリバリー",
     shortLabel: "FDE",
-    duration: "4〜6週間",
-    purpose: "顧客要件をシステム設計・実装へ変換できる。",
-    weeks: [9, 10, 11, 12],
+    duration: "5週間",
+    purpose: "要件から設計・実装・デプロイ・運用まで顧客と進められる。",
+    weeks: [8, 9, 10, 11, 12],
   },
 ];
 
@@ -82,10 +97,11 @@ export const curriculumChapters: CurriculumChapter[] = [
   {
     week: 2,
     phase: "foundation",
-    title: "コードを読むための基礎",
-    purpose: "実装前に、コードがどこで何をしているか追えるようにする。",
-    target: "既存コードを読み、画面・API・処理があるファイルを探せる。",
+    title: "開発環境とコード読解",
+    purpose: "OS・プロセス・ファイル構造を理解し、コードが動く場所を追えるようにする。",
+    target: "ターミナルで開発環境を確認し、画面・API・処理があるファイルを探せる。",
     lessons: [
+      { slug: "os-terminal-processes", title: "OS・ターミナル・プロセス" },
       { slug: "project-files-and-imports", title: "ファイルとディレクトリ" },
       { slug: "javascript-typescript-basics", title: "JavaScript／TypeScript基礎" },
       { slug: "react-basics", title: "React基礎" },
@@ -96,35 +112,35 @@ export const curriculumChapters: CurriculumChapter[] = [
   {
     week: 3,
     phase: "implementation",
-    title: "フロントエンド",
-    purpose: "TalentScanの候補者画面を題材にReactの画面実装を学ぶ。",
-    target: "既存画面の項目追加や表示変更を自分で行える。",
+    title: "候補者一覧を縦に実装",
+    purpose: "候補者一覧を題材に、DB・API・画面を一つの流れとしてつなぐ。",
+    target: "一覧取得のデータフローを説明し、表示と例外処理まで実装できる。",
     lessons: [],
-    topics: ["候補者一覧・詳細画面", "component・props・state", "event・form管理", "loading・error表示"],
+    topics: ["一覧要件・データモデル", "取得API・query", "React component・state", "loading・error・test"],
   },
   {
     week: 4,
     phase: "implementation",
-    title: "APIとバックエンド",
-    purpose: "フロントエンドから呼べる候補者・評価APIを実装する。",
-    target: "APIを呼び、入力を検証し、結果を画面へ返せる。",
+    title: "候補者詳細・編集を縦に実装",
+    purpose: "候補者詳細の取得と編集を、画面からDB更新まで通して作る。",
+    target: "入力を検証し、安全に更新して結果を画面へ返せる。",
     lessons: [],
-    topics: ["GET・POST", "request body・path・query parameter", "入力検証", "status code・error handling"],
+    topics: ["動的route・詳細取得", "form・event管理", "入力検証・更新API", "認証・status code・error handling"],
   },
   {
     week: 5,
     phase: "implementation",
-    title: "DBとSQL",
-    purpose: "TalentScanの業務データを関係として設計し、操作する。",
-    target: "必要なデータを設計し、保存・取得できる。",
+    title: "面接回答・評価準備を縦に実装",
+    purpose: "面接回答と評価ステータスを、業務データとして保存できる形にする。",
+    target: "回答入力から保存、評価待ち状態までの一連の処理を実装できる。",
     lessons: [],
-    topics: ["table設計・主キー・外部キー", "1対多", "SELECT・INSERT・UPDATE・DELETE・JOIN", "migration"],
+    topics: ["回答・面接データモデル", "1対多・migration", "入力・保存API", "評価status・取得・test"],
   },
   {
     week: 6,
     phase: "implementation",
-    title: "AI・Bedrock連携",
-    purpose: "AI推論をTalentScanのバックエンド処理へ組み込む。",
+    title: "AI評価生成・保存を縦に実装",
+    purpose: "AI推論を評価処理へ組み込み、検証可能な業務データとして保存する。",
     target: "AI評価を生成し、検証・保存・再利用できる。",
     lessons: [],
     topics: ["AWS SDK・Bedrock Runtime", "prompt・構造化出力", "JSON parse・DB保存", "timeout・retry・error handling"],
@@ -132,59 +148,100 @@ export const curriculumChapters: CurriculumChapter[] = [
   {
     week: 7,
     phase: "implementation",
-    title: "認証とセキュリティ",
-    purpose: "利用者と組織ごとに安全なデータ境界を作る。",
-    target: "誰が何を実行・閲覧できるかを実装へ落とせる。",
+    title: "ATS連携と権限境界を縦に実装",
+    purpose: "外部ATSとのデータ連携と、利用者・組織ごとの安全な境界を作る。",
+    target: "連携の失敗や再送を考慮し、誰が何を実行・閲覧できるか実装できる。",
     lessons: [],
-    topics: ["login・session・Cookie", "認証・認可", "user・organization・data access control", "API key・環境変数・入力検証"],
+    topics: ["API・Webhook・認証", "idempotency・retry", "user・organization・認可", "API key・監査log・data access control"],
   },
   {
     week: 8,
-    phase: "implementation",
-    title: "デプロイと運用",
-    purpose: "変更を安全に共有し、本番へ反映して調査できるようにする。",
-    target: "GitHub経由で本番へ反映し、ログからエラーを調査できる。",
-    lessons: [
-      { slug: "markdown-learning-hub-and-pull-request", title: "Git・GitHub・Pull Request" },
-      { slug: "development-to-deployment", title: "ローカル・build・Vercel" },
-    ],
-    topics: ["branch・commit・push・Pull Request", "Vercel・本番環境・環境変数", "log・error調査"],
-  },
-  {
-    week: 9,
     phase: "fde-practice",
     title: "要件定義",
     purpose: "顧客の言葉から業務とシステムの要件を取り出す。",
     target: "利用者、入出力、業務ルール、例外、非機能要件を整理できる。",
     lessons: [],
-    topics: ["現行業務・課題・利用者・use case", "入力・出力・業務ルール・例外", "非機能要件", "FDEとして確認する問い"],
+    topics: ["現行業務・課題・利用者・use case", "入力・出力・業務ルール・例外", "非機能要件・制約", "FDEとして確認する問い"],
+  },
+  {
+    week: 9,
+    phase: "fde-practice",
+    title: "業務・システム設計",
+    purpose: "現行業務を分解し、AIを含む将来業務とシステムの境界を設計する。",
+    target: "人・AI・システムの役割と、画面・API・DB・連携の設計を説明できる。",
+    lessons: [],
+    topics: ["現行業務・ボトルネック分析", "AI BPR・将来業務・人の判断", "画面・API・DB設計", "data flow・権限・外部連携"],
   },
   {
     week: 10,
     phase: "fde-practice",
-    title: "システム設計",
-    purpose: "要件を画面、API、DB、連携、運用へ分解する。",
-    target: "構成図、データフロー、API、DB、画面の設計成果物を作れる。",
+    title: "顧客別実装・検証",
+    purpose: "設計を小さな実装へ落とし、顧客と早く検証して修正する。",
+    target: "設定とコード変更を判断し、受け入れ条件に沿って機能を検証できる。",
     lessons: [],
-    topics: ["画面・API・DB設計", "data flow・外部連携", "権限・error handling", "batch／real-time・API／Webhook"],
+    topics: ["AI BPR prototype・業務検証", "共通機能・個社設定・code変更", "ATS・評価基準・通知", "受け入れ条件・test・feedback"],
   },
   {
     week: 11,
     phase: "fde-practice",
-    title: "顧客別カスタマイズ",
-    purpose: "共通機能と個社要件を分離し、変更方法を判断する。",
-    target: "設定、コード変更、外部連携、運用の境界を説明できる。",
+    title: "デプロイ・導入",
+    purpose: "検証済みの変更を安全に本番へ届け、利用開始まで伴走する。",
+    target: "変更を本番へ反映し、移行・教育・障害時対応を含む導入計画を実行できる。",
     lessons: [],
-    topics: ["個社要件と共通機能", "設定とコード変更", "ATS・評価基準・質問・通知", "API連携仕様・障害時運用"],
+    topics: ["AI BPR rollout・定着支援", "data migration・環境変数", "Git・Pull Request・Vercel", "利用者教育・release・rollback"],
   },
   {
     week: 12,
     phase: "fde-practice",
-    title: "FDE総合課題",
-    purpose: "TalentScanの一機能を要件から本番反映まで通して作る。",
-    target: "設計意図を説明しながら、Codexと実装・検証を進められる。",
+    title: "運用・改善",
+    purpose: "本番データと利用者の声から、業務とシステムを継続的に改善する。",
+    target: "障害対応と効果測定を行い、次の改善を要件へ戻せる。",
     lessons: [],
-    topics: ["要件整理・data flow・DB・API設計", "frontend・Bedrock実装", "error handling・test・GitHub反映", "設計意図の説明"],
+    topics: ["monitoring・log・alert", "incident・復旧・再発防止", "業務KPI・AI品質・利用状況", "feedback・改善backlog・総合振り返り"],
+  },
+];
+
+export const curriculumCrossCuttingThemes: CurriculumCrossCuttingTheme[] = [
+  {
+    id: "git-delivery",
+    title: "Git・デリバリー",
+    description: "各Weekの成果を、小さく安全に共有して戻せる状態にする。",
+    practices: ["branch・commit", "Pull Request・review", "build・release evidence"],
+  },
+  {
+    id: "security",
+    title: "セキュリティ",
+    description: "機能ごとに秘密情報、本人確認、権限、データ境界を確認する。",
+    practices: ["secret・環境変数", "認証・認可", "入力検証・data access"],
+  },
+  {
+    id: "debugging",
+    title: "デバッグ・可観測性",
+    description: "再現条件と証拠を集め、仮説を検証して復旧まで記録する。",
+    practices: ["再現・切り分け", "Network・log・error", "復旧・再発防止"],
+  },
+];
+
+export const curriculumReferences: CurriculumReference[] = [
+  {
+    slug: "markdown-learning-hub-and-pull-request",
+    title: "Git・GitHub・Pull Request",
+    description: "教材追加を例に、変更を安全に共有する手順を確認する。",
+    category: "Git・デリバリー",
+    href: "/learning/readings/markdown-learning-hub-and-pull-request",
+  },
+  {
+    slug: "development-to-deployment",
+    title: "ローカル・build・Vercel",
+    description: "ローカルの変更が本番へ届くまでの境界と確認方法を整理する。",
+    category: "Git・デリバリー",
+    href: "/learning/readings/development-to-deployment",
+  },
+  {
+    title: "実践トラブルシューティングログ",
+    description: "実際の症状、原因、証拠、復旧手順を横断的に参照する。",
+    category: "デバッグ・可観測性",
+    href: "/learning/troubleshooting",
   },
 ];
 
@@ -208,6 +265,10 @@ export function getCurriculumLesson(slug: string) {
     }
   }
   return null;
+}
+
+export function getCurriculumReference(slug: string) {
+  return curriculumReferences.find((reference) => reference.slug === slug) ?? null;
 }
 
 export const curriculumLessons = curriculumChapters.flatMap((chapter) =>

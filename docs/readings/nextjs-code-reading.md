@@ -1,7 +1,7 @@
 ---
-order: 11
+order: 12
 week: 2
-lesson: 4
+lesson: 5
 phase: foundation
 title: Next.jsでページ・API・実行場所を探す
 summary: App Router、page、layout、動的route、Server／Client Component、Route Handler、環境変数を一つの地図にする。
