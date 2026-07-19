@@ -1,12 +1,15 @@
 # FDEカリキュラム教材
 
-教材は、正式カリキュラムの3フェーズ・12章を基準に管理する。章はWeekと1対1で対応し、各章の中に必要な数のLesson／Readingを置く。
+教材は、正式カリキュラムの3フェーズ・12 Weekを基準に管理する。Weekの中で順に学ぶ必須Lessonと、必要なときに参照するReferenceを分ける。
 
 ```text
-Curriculum → Chapter → Lesson／Reading → Exercise → Learning Log
+Curriculum → Week → 必須Lesson → Exercise → Learning Log
+                    ↘ Reference（横断参照）
 ```
 
-Learning Logは教材の元原稿ではなく、Lessonの理解と演習結果を記録する進捗データとして扱う。
+Learning Logは教材の元原稿ではなく、Lessonの理解と演習結果を記録する進捗データとして扱う。Referenceの閲覧は必須Lessonの完了判定へ含めない。
+
+Git、セキュリティ、デバッグは特定Weekだけで完結させず、全Weekで実践する横断テーマとする。正式なWeek、Lesson、横断テーマ、Referenceの登録は`lib/learning-curriculum.ts`を正とする。
 
 ## ファイル名
 
@@ -33,9 +36,24 @@ relatedLogs: 2026-07-18
 ---
 ```
 
-複数の`prerequisiteReadings`または`relatedLogs`はカンマ区切りで記述する。章とLessonの正式な順序は`lib/learning-curriculum.ts`を正とする。
+複数の`prerequisiteReadings`または`relatedLogs`はカンマ区切りで記述する。WeekとLessonの正式な順序は`lib/learning-curriculum.ts`を正とする。
 
-## 各Lesson／Readingの必須構成
+Referenceは次のように`kind`を明示し、`week`、`lesson`、`phase`を持たせない。
+
+```yaml
+---
+order: 101
+kind: reference
+title: Referenceタイトル
+summary: 必要なときに参照する内容
+prerequisite: 必要になったWeekで参照する
+prerequisiteReadings:
+goal: 手順と判断基準を確認できる
+relatedLogs:
+---
+```
+
+## 各必須Lessonの構成
 
 1. このLessonで解けるようになる問い
 2. なぜFDEに必要か

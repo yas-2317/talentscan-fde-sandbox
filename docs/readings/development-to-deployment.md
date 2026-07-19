@@ -1,8 +1,6 @@
 ---
-order: 31
-week: 8
-lesson: 2
-phase: implementation
+order: 102
+kind: reference
 title: 開発から公開まで — Next.js・Git・GitHub・Vercel
 summary: Macで編集したコードがlocalhostで動き、GitHubを経由してVercelへ公開される流れを学ぶ。
 prerequisite: Git・GitHub・Pull Requestの基本

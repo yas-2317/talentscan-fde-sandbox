@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatJapaneseDate, formatLearningPeriod } from "@/lib/learning-format";
+import { curriculumCrossCuttingThemes } from "@/lib/learning-curriculum";
 import { getLearningLogs } from "@/lib/learning-logs";
 import { getLearningPhase, getLearningProgress } from "@/lib/learning-roadmap";
 import { getReadings } from "@/lib/readings";
@@ -72,7 +73,7 @@ export default async function LearningPage() {
             <p className="eyebrow">Three Phases</p>
             <h2>全体カリキュラム</h2>
           </div>
-          <p>構造理解から個別実装、FDE実践へ進みます。</p>
+          <p>基礎理解から候補者管理の縦実装、FDEデリバリーへ進みます。</p>
         </div>
         <div className="roadmap-grid roadmap-grid-three">
           {progress.phases.map((phase) => (
@@ -97,6 +98,28 @@ export default async function LearningPage() {
       <section className="learning-section">
         <div className="section-heading">
           <div>
+            <p className="eyebrow">Cross-cutting Themes</p>
+            <h2>全Weekで実践すること</h2>
+          </div>
+          <p>一度だけ学ぶ章ではなく、毎回の実装と検証に組み込みます。</p>
+        </div>
+        <div className="cross-cutting-grid">
+          {curriculumCrossCuttingThemes.map((theme) => (
+            <article className="cross-cutting-card" key={theme.id}>
+              <span>Week 1〜12</span>
+              <h3>{theme.title}</h3>
+              <p>{theme.description}</p>
+              <ul>
+                {theme.practices.map((practice) => <li key={practice}>{practice}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="learning-section">
+        <div className="section-heading">
+          <div>
             <p className="eyebrow">Current Chapter</p>
             <h2>Week {progress.currentChapter.week}の教材</h2>
           </div>
@@ -107,7 +130,7 @@ export default async function LearningPage() {
             <Link href={`/learning/readings/${reading.slug}`} className="reading-preview-card" key={reading.slug}>
               <div>
                 <span>Lesson {reading.lesson}</span>
-                <span className="phase-tag">{getLearningPhase(reading.phase).label}</span>
+                {reading.phase && <span className="phase-tag">{getLearningPhase(reading.phase).label}</span>}
               </div>
               <h3>{reading.title}</h3>
               <p>{reading.summary}</p>

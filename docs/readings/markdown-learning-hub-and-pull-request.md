@@ -1,11 +1,9 @@
 ---
-order: 30
-week: 8
-lesson: 1
-phase: implementation
+order: 101
+kind: reference
 title: Markdown駆動の学習ポータルとPull Request
 summary: Markdownをデータ源にするNext.js画面と、feature branchからPull Requestへ進む開発フローを学ぶ。
-prerequisite: Week 1〜7の基礎と実装経験
+prerequisite: 必要になったWeekで参照する
 prerequisiteReadings:
 goal: Markdown追加から画面表示までを追跡し、Pull Requestを使う理由を説明できる。
 relatedLogs: 2026-07-12

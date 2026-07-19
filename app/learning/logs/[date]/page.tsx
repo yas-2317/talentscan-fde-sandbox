@@ -64,7 +64,9 @@ export default async function LearningLogPage({ params }: { params: Promise<{ da
               <div>
                 {relatedReadings.map((reading) => (
                   <Link href={`/learning/readings/${reading.slug}`} key={reading.slug}>
-                    <span>Week {reading.week}・Lesson {reading.lesson}</span>
+                    <span>
+                      {reading.kind === "reference" ? "Reference" : `Week ${reading.week}・Lesson ${reading.lesson}`}
+                    </span>
                     <strong>{reading.title}</strong>
                     <span aria-hidden="true">→</span>
                   </Link>
