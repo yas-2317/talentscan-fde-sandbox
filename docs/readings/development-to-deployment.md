@@ -62,7 +62,7 @@ git rev-parse --show-toplevel
 git status
 ```
 
-`pwd`は現在位置、`git rev-parse --show-toplevel`はGitが管理しているルート、`git status`はbranchと未処理の変更を示す。期待するプロジェクトとGitルートが違う場合は、commitする前に止まる。
+`pwd`は現在位置、`git rev-parse --show-toplevel`はGitが管理しているルート、`git status`はbranchと未処理の変更を示す。期待するプロジェクトとGitルートが違う場合は、commitする前に手を止める。
 
 ## buildとdeploy
 

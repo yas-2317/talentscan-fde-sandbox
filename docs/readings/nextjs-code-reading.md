@@ -13,7 +13,7 @@ relatedLogs: 2026-07-12, 2026-07-13
 
 # Next.jsでページ・API・実行場所を探す
 
-## このLessonで解けるようになる問い
+## このLessonで答えられるようになる問い
 
 - URLは`app`内のどのファイルへ対応するのか。
 - Server ComponentとClient Componentは何を基準に選ぶのか。

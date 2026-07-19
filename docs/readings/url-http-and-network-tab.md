@@ -37,7 +37,7 @@ relatedLogs: 2026-07-14
 |---|---|---|
 | scheme | `http` | 通信方式 |
 | host | `localhost` | 接続先 |
-| port | `3000` | 接続先の待受口 |
+| port | `3000` | 接続先の待ち受けポート |
 | path | `/learning` | 取得したい資源 |
 
 公開環境ではschemeが`https`、hostがVercelのドメインになる。pathは同じアプリ内のページやAPIを表す。

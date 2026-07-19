@@ -13,7 +13,7 @@ relatedLogs:
 
 # JavaScript／TypeScriptの値と処理を読む
 
-## このLessonで解けるようになる問い
+## このLessonで答えられるようになる問い
 
 - コードのどこがデータで、どこが処理なのか。
 - 配列とオブジェクトはTalentScanの候補者データをどう表すのか。
