@@ -31,7 +31,7 @@ export default async function LearningLogPage({ params }: { params: Promise<{ da
 
       <header className="log-detail-header">
         <div className="detail-meta-row">
-          <span className="day-badge">Day {log.day}</span>
+          <span className="mono">Day {log.day}</span>
           <time dateTime={log.date}>{formatJapaneseDate(log.date)}</time>
           <span className="phase-tag">{phase.label}</span>
         </div>

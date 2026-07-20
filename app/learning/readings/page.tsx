@@ -83,7 +83,7 @@ export default async function ReadingsPage() {
                       <header className="curriculum-chapter-heading">
                         <div>
                           <span>Week {chapter.week.toString().padStart(2, "0")}</span>
-                          <span className="roadmap-status">{statusLabel(chapterStatus)}</span>
+                          <span className={`lesson-status is-${chapterStatus}`}>{statusLabel(chapterStatus)}</span>
                         </div>
                         <h3>{chapter.title}</h3>
                         <p>{chapter.target}</p>
