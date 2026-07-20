@@ -37,90 +37,104 @@ export default async function ReadingsPage() {
         </div>
       </header>
 
-      <section className="curriculum-theme-section">
-        <div className="reading-phase-heading">
-          <div>
-            <span>CROSS-CUTTING</span>
-            <h2>全Weekの横断テーマ</h2>
-          </div>
-          <p>独立した章としてではなく、毎週の成果物づくりと意思決定のなかで繰り返し実践します。</p>
+      <section className="panel cross-cutting-strip" aria-label="全Weekの横断テーマ">
+        <div className="panel-head">
+          <h2>全Weekで実践する横断テーマ</h2>
         </div>
-        <div className="cross-cutting-grid">
-          {curriculumCrossCuttingThemes.map((theme) => (
-            <article className="cross-cutting-card" key={theme.id}>
-              <span>Week 1〜12</span>
-              <h3>{theme.title}</h3>
+        {curriculumCrossCuttingThemes.map((theme) => (
+          <div className="cross-cutting-row" key={theme.id}>
+            <strong>{theme.title}</strong>
+            <div>
               <p>{theme.description}</p>
-              <ul>
-                {theme.practices.map((practice) => <li key={practice}>{practice}</li>)}
-              </ul>
-            </article>
-          ))}
-        </div>
+              <span>{theme.practices.join(" / ")}</span>
+            </div>
+          </div>
+        ))}
       </section>
 
       <div className="curriculum-phases">
         {curriculumPhases.map((phase) => {
           const chapters = curriculumChapters.filter((chapter) => chapter.phase === phase.id);
+          const completedCount = chapters.filter(
+            (chapter) => progressByWeek.get(chapter.week)?.status === "completed",
+          ).length;
 
           return (
             <section className="curriculum-phase-section" key={phase.id}>
-              <div className="reading-phase-heading">
+              <div className="phase-line">
                 <div>
-                  <span>PHASE {phase.order}</span>
-                  <h2>{phase.label}</h2>
+                  <h2>Phase {phase.order} {phase.label}</h2>
+                  <p>{phase.purpose}({phase.duration})</p>
                 </div>
-                <p>{phase.purpose}（{phase.duration}）</p>
+                <span className="mono">{completedCount} / {chapters.length}章</span>
+              </div>
+              <div className="roadmap-meter phase-line-meter" aria-hidden="true">
+                <i style={{ width: `${(completedCount / chapters.length) * 100}%` }} />
               </div>
 
-              <div className="curriculum-chapters">
+              <div className="chapter-list">
                 {chapters.map((chapter) => {
                   const chapterProgress = progressByWeek.get(chapter.week);
                   const chapterStatus = chapterProgress?.status ?? "upcoming";
 
                   return (
-                    <article className={`curriculum-chapter is-${chapterStatus}`} key={chapter.week}>
-                      <header className="curriculum-chapter-heading">
-                        <div>
-                          <span>Week {chapter.week.toString().padStart(2, "0")}</span>
-                          <span className={`lesson-status is-${chapterStatus}`}>{statusLabel(chapterStatus)}</span>
-                        </div>
-                        <h3>{chapter.title}</h3>
-                        <p>{chapter.target}</p>
-                      </header>
+                    <details
+                      className={`fold chapter-details is-${chapterStatus}`}
+                      open={chapterStatus === "current"}
+                      key={chapter.week}
+                    >
+                      <summary>
+                        <span className="chevron" aria-hidden="true" />
+                        <span className="mono fold-key">W{chapter.week.toString().padStart(2, "0")}</span>
+                        <strong>{chapter.title}</strong>
+                        <span className="mono fold-count">
+                          {chapter.lessons.length > 0
+                            ? `${chapterProgress?.completedLessonCount ?? 0} / ${chapter.lessons.length} Lessons`
+                            : "設計前"}
+                        </span>
+                        <span className={`fold-status is-${chapterStatus}`}>
+                          <span className="status-dot" aria-hidden="true" />
+                          {statusLabel(chapterStatus)}
+                        </span>
+                      </summary>
 
-                      <div className="curriculum-lesson-list">
-                        {chapter.lessons.length > 0 ? chapter.lessons.map((lesson, lessonIndex) => {
-                          const reading = readingBySlug.get(lesson.slug);
-                          const completed = progress.completedLessons.has(lesson.slug);
-                          const current = progress.currentLesson?.slug === lesson.slug;
-                          const className = `curriculum-lesson-row${completed ? " is-completed" : ""}${current ? " is-current" : ""}${reading ? "" : " is-planned"}`;
-                          const content = (
-                            <>
-                              <span className="lesson-number">Lesson {(lessonIndex + 1).toString().padStart(2, "0")}</span>
-                              <div>
-                                <strong>{lesson.title}</strong>
-                                <small>{completed ? "完了" : current ? "次に学ぶ" : reading ? "教材公開済み" : "作成予定"}</small>
-                              </div>
-                              <span aria-hidden="true">{reading ? "→" : "—"}</span>
-                            </>
-                          );
+                      <div className="fold-body">
+                        <p className="chapter-target">到達目標:{chapter.target}</p>
+                        {chapter.lessons.length > 0 ? (
+                          <div className="curriculum-lesson-list">
+                            {chapter.lessons.map((lesson, lessonIndex) => {
+                              const reading = readingBySlug.get(lesson.slug);
+                              const completed = progress.completedLessons.has(lesson.slug);
+                              const current = progress.currentLesson?.slug === lesson.slug;
+                              const className = `curriculum-lesson-row${completed ? " is-completed" : ""}${current ? " is-current" : ""}${reading ? "" : " is-planned"}`;
+                              const content = (
+                                <>
+                                  <span className="lesson-number">Lesson {(lessonIndex + 1).toString().padStart(2, "0")}</span>
+                                  <div>
+                                    <strong>{lesson.title}</strong>
+                                    <small>{completed ? "完了" : current ? "次に学ぶ" : reading ? "教材公開済み" : "作成予定"}</small>
+                                  </div>
+                                  <span aria-hidden="true">{reading ? "→" : "—"}</span>
+                                </>
+                              );
 
-                          return reading ? (
-                            <Link href={`/learning/readings/${reading.slug}`} className={className} key={lesson.slug}>
-                              {content}
-                            </Link>
-                          ) : (
-                            <div className={className} key={lesson.slug}>{content}</div>
-                          );
-                        }) : (
+                              return reading ? (
+                                <Link href={`/learning/readings/${reading.slug}`} className={className} key={lesson.slug}>
+                                  {content}
+                                </Link>
+                              ) : (
+                                <div className={className} key={lesson.slug}>{content}</div>
+                              );
+                            })}
+                          </div>
+                        ) : (
                           <div className="curriculum-topic-list">
                             <span>この章のLesson構成は、開始前に到達目標をもとに設計します</span>
                             {chapter.topics.map((topic) => <p key={topic}>{topic}</p>)}
                           </div>
                         )}
                       </div>
-                    </article>
+                    </details>
                   );
                 })}
               </div>
@@ -132,7 +146,6 @@ export default async function ReadingsPage() {
       <section className="reference-library">
         <div className="reading-phase-heading">
           <div>
-            <span>REFERENCE LIBRARY</span>
             <h2>必要なときに参照する資料</h2>
           </div>
           <p>Referenceは横断テーマを支える参照資料です。必須Lessonの完了判定には含めません。</p>
