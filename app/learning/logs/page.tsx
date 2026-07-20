@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatJapaneseDate, formatLearningPeriod, formatMonthLabel } from "@/lib/learning-format";
+import { formatLearningPeriod, formatMonthLabel, formatShortDate } from "@/lib/learning-format";
 import { getLearningLogs } from "@/lib/learning-logs";
 import { getLearningPhase } from "@/lib/learning-roadmap";
 
@@ -38,35 +38,47 @@ export default async function LearningLogsPage() {
         </aside>
 
         <div className="archive-months">
-          {[...groupedLogs.entries()].map(([month, monthLogs]) => (
-            <section className="archive-month" id={`month-${month}`} key={month}>
-              <div className="month-heading">
-                <h2>{formatMonthLabel(month)}</h2>
-                <span>{monthLogs.length} logs</span>
+          {[...groupedLogs.entries()].map(([month, monthLogs], monthIndex) => (
+            <details
+              className="fold month-details"
+              id={`month-${month}`}
+              open={monthIndex === 0}
+              key={month}
+            >
+              <summary>
+                <span className="chevron" aria-hidden="true" />
+                <strong>{formatMonthLabel(month)}</strong>
+                <span className="mono fold-count">{monthLogs.length}日学習</span>
+              </summary>
+
+              <div className="fold-body">
+                <table className="log-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Day</th>
+                      <th scope="col">日付</th>
+                      <th scope="col">トピック</th>
+                      <th scope="col" className="log-table-phase">フェーズ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {monthLogs.map((log) => (
+                      <tr key={log.date}>
+                        <td className="mono">{log.day}</td>
+                        <td className="mono">
+                          <time dateTime={log.date}>{formatShortDate(log.date)}</time>
+                        </td>
+                        <td>
+                          <Link href={`/learning/logs/${log.date}`}>{log.topic}</Link>
+                          <p>{log.summary}</p>
+                        </td>
+                        <td className="log-table-phase">{getLearningPhase(log.phase).label}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <div className="timeline-list">
-                {monthLogs.map((log) => {
-                  const phase = getLearningPhase(log.phase);
-                  return (
-                    <Link href={`/learning/logs/${log.date}`} className="timeline-row" key={log.date}>
-                      <div className="timeline-marker">
-                        <span aria-hidden="true" />
-                      </div>
-                      <span className="timeline-day">Day {log.day}</span>
-                      <div className="timeline-content">
-                        <span className="log-meta">
-                          <time dateTime={log.date}>{formatJapaneseDate(log.date)}</time>
-                          <span className="phase-tag">{phase.label}</span>
-                        </span>
-                        <h3>{log.topic}</h3>
-                        <p>{log.summary}</p>
-                      </div>
-                      <span className="row-arrow" aria-hidden="true">→</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
+            </details>
           ))}
         </div>
       </div>
