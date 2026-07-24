@@ -9,10 +9,10 @@ export default function LearningLayout({ children }: { children: React.ReactNode
           <small>TalentScan Sandbox</small>
         </Link>
         <nav aria-label="学習ポータル">
-          <Link href="/learning">ダッシュボード</Link>
-          <Link href="/learning/readings">教材</Link>
-          <Link href="/learning/logs">学習ログ</Link>
-          <Link href="/learning/troubleshooting">トラブルログ</Link>
+          <Link href="/learning">Dashboard</Link>
+          <Link href="/learning/readings">Lessons</Link>
+          <Link href="/learning/logs">Logs</Link>
+          <Link href="/learning/troubleshooting">Troubleshooting</Link>
         </nav>
       </header>
       {children}
