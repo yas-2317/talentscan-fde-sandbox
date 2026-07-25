@@ -1235,6 +1235,61 @@ a:focus-visible {
   font-size: 11px;
 }
 
+.guide-card.is-compact {
+  min-height: 168px;
+  padding: 20px;
+}
+
+.guide-card.is-compact h3 {
+  margin-top: 14px;
+}
+
+.guide-card.is-compact strong {
+  padding-top: 16px;
+}
+
+.related-library-links {
+  margin-top: 26px;
+  display: grid;
+  gap: 10px;
+}
+
+.related-library-links > a {
+  padding: 16px 22px;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 16px;
+  align-items: baseline;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 140ms ease;
+}
+
+.related-library-links > a:hover {
+  border-color: var(--line-strong);
+}
+
+.related-library-links > a > span {
+  color: #55729d;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.related-library-links > a > strong {
+  font-size: 13px;
+}
+
+.related-library-links > a > p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
 .curriculum-lesson-list {
   display: grid;
 }
@@ -1756,6 +1811,11 @@ a.curriculum-lesson-row:hover {
 
   .reference-grid {
     grid-template-columns: 1fr;
+  }
+
+  .related-library-links > a {
+    grid-template-columns: 1fr;
+    gap: 6px;
   }
 
   .reading-meta-panel {

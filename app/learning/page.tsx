@@ -1,4 +1,5 @@
 import { FdeRoadmap } from "@/components/fde-roadmap";
+import { GuideCard } from "@/components/guide-card";
 import { LearningHeatmap } from "@/components/learning-heatmap";
 import { LearningTimeline } from "@/components/learning-timeline";
 import { SectionHeader } from "@/components/section-header";
@@ -27,6 +28,12 @@ export default async function LearningPage() {
         label: `Restart Lesson — ${nextReading.title}`,
       }
     : null;
+
+  // 新しいGuideほどorderが大きいため、降順で最新のfeatured Guideを最大3件表示する
+  const featuredGuides = readings
+    .filter((reading) => reading.kind === "reference" && reading.featured)
+    .sort((a, b) => b.order - a.order)
+    .slice(0, 3);
 
   return (
     <main className="learning-page dashboard">
@@ -90,6 +97,31 @@ export default async function LearningPage() {
           <FdeRoadmap progress={progress} />
         </section>
       </div>
+
+      {featuredGuides.length > 0 && (
+        <section className="panel">
+          <SectionHeader
+            title="Practice Guides"
+            href="/learning/readings#practice-guides"
+            linkLabel="View All"
+          />
+          <div className="panel-body">
+            <div className="reference-grid guide-grid-dashboard">
+              {featuredGuides.map((guide) => (
+                <GuideCard
+                  href={`/learning/readings/${guide.slug}`}
+                  category={guide.category}
+                  title={guide.title}
+                  summary={guide.summary}
+                  estimatedMinutes={guide.estimatedMinutes}
+                  compact
+                  key={guide.slug}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

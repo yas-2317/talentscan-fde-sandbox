@@ -45,11 +45,11 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
       <header className="log-detail-header reading-detail-header">
         <div className="detail-meta-row">
           <span className="reading-badge">
-            {isReference ? "Reference" : `Week ${reading.week}・Lesson ${reading.lesson}`}
+            {isReference ? "Guide" : `Week ${reading.week}・Lesson ${reading.lesson}`}
           </span>
           {phase && <span className="phase-tag">{phase.label}</span>}
           <span className={`lesson-status is-${isReference ? "reference" : completed ? "completed" : current ? "current" : "available"}`}>
-            {isReference ? "参照資料" : completed ? "完了" : current ? "次に学ぶ" : "教材公開済み"}
+            {isReference ? "常設ガイド" : completed ? "完了" : current ? "次に学ぶ" : "教材公開済み"}
           </span>
         </div>
         <h1>{reading.title}</h1>
@@ -64,14 +64,14 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
             <div className="reading-meta-links">
               {prerequisiteReadings.map((entry) => (
                 <Link href={`/learning/readings/${entry.slug}`} key={entry.slug}>
-                  {entry.kind === "reference" ? "Reference" : `W${entry.week} L${entry.lesson}`} →
+                  {entry.kind === "reference" ? "Guide" : `W${entry.week} L${entry.lesson}`} →
                 </Link>
               ))}
             </div>
           )}
         </div>
         <div>
-          <span>{isReference ? "このReferenceの到達目標" : "このLessonの到達目標"}</span>
+          <span>{isReference ? "このGuideの到達目標" : "このLessonの到達目標"}</span>
           <strong>{reading.goal}</strong>
         </div>
         <div>
@@ -96,7 +96,7 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
 
       <div className="log-detail-grid">
         <aside className="log-toc">
-          <p className="card-label">{isReference ? "On this Reference" : "On this Lesson"}</p>
+          <p className="card-label">{isReference ? "On this Guide" : "On this Lesson"}</p>
           <nav aria-label="この教材の目次">
             {headings.map((heading) => (
               <a className={heading.level === 3 ? "is-nested" : ""} href={`#${heading.id}`} key={`${heading.id}-${heading.level}`}>
@@ -113,13 +113,13 @@ export default async function ReadingPage({ params }: { params: Promise<{ slug: 
             {previousReading ? (
               <Link href={`/learning/readings/${previousReading.slug}`}>
                 <span>← 前の教材</span>
-                <strong>{previousReading.kind === "reference" ? "Reference" : `W${previousReading.week} L${previousReading.lesson}`}｜{previousReading.title}</strong>
+                <strong>{previousReading.kind === "reference" ? "Guide" : `W${previousReading.week} L${previousReading.lesson}`}｜{previousReading.title}</strong>
               </Link>
             ) : <span />}
             {nextReading ? (
               <Link href={`/learning/readings/${nextReading.slug}`} className="is-next-link">
                 <span>次の教材 →</span>
-                <strong>{nextReading.kind === "reference" ? "Reference" : `W${nextReading.week} L${nextReading.lesson}`}｜{nextReading.title}</strong>
+                <strong>{nextReading.kind === "reference" ? "Guide" : `W${nextReading.week} L${nextReading.lesson}`}｜{nextReading.title}</strong>
               </Link>
             ) : <span />}
           </nav>

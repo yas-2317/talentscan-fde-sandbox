@@ -1,15 +1,15 @@
 # FDEカリキュラム教材
 
-教材は、正式カリキュラムの3フェーズ・12 Weekを基準に管理する。Weekの中で順に学ぶ必須Lessonと、必要なときに参照するReferenceを分ける。
+教材は、正式カリキュラムの3フェーズ・12 Weekを基準に管理する。Weekの中で順に学ぶ必須Lessonと、必要なときに参照するPractice Guide（内部実装上の`kind`は`reference`）を分ける。
 
 ```text
 Curriculum → Week → 必須Lesson → Exercise → Learning Log
-                    ↘ Reference（横断参照）
+                    ↘ Practice Guide（常設参照）
 ```
 
-Learning Logは教材の元原稿ではなく、Lessonの理解と演習結果を記録する進捗データとして扱う。Referenceの閲覧は必須Lessonの完了判定には含めない。
+Learning Logは教材の元原稿ではなく、Lessonの理解と演習結果を記録する進捗データとして扱う。Guideの閲覧は必須Lessonの完了判定には含めない。
 
-Git、セキュリティ、デバッグは特定Weekだけで完結させず、全Weekで実践する横断テーマとする。正式なWeek、Lesson、横断テーマ、Referenceの登録は`lib/learning-curriculum.ts`を正とする。
+Git、セキュリティ、デバッグは特定Weekだけで完結させず、全Weekで実践する横断テーマとする。Week・Lesson・横断テーマの登録は`lib/learning-curriculum.ts`を正とする。Guideは`lib/learning-curriculum.ts`の`curriculumReferenceSlugs`が公開許可リストであり、タイトル・説明・分類などの表示内容はMarkdown frontmatterを正とする。
 
 ## ファイル名
 
@@ -38,20 +38,34 @@ relatedLogs: 2026-07-18
 
 複数の`prerequisiteReadings`または`relatedLogs`はカンマ区切りで記述する。WeekとLessonの正式な順序は`lib/learning-curriculum.ts`を正とする。
 
-Referenceは次のように`kind`を明示し、`week`、`lesson`、`phase`を持たせない。
+Practice Guideは次のように`kind`を明示し、`week`、`lesson`、`phase`を持たせない。
 
 ```yaml
 ---
-order: 101
+order: 103
 kind: reference
-title: Referenceタイトル
-summary: 必要なときに参照する内容
+title: Guideタイトル
+summary: 一覧カードに表示する短い説明
 prerequisite: 必要になったWeekで参照する
 prerequisiteReadings:
 goal: 手順と判断基準を確認できる
-relatedLogs:
+relatedLogs: 2026-07-25
+category: 開発ツール
+estimatedMinutes: 30
+featured: true
 ---
 ```
+
+Guide固有の項目と制約:
+
+- `order`: Guideは100番台を使い、追加順に採番する（新しいGuideほど大きい）
+- `category`: 一覧カードに表示する分類
+- `estimatedMinutes`: 読了・練習時間の目安（正の数値のみ有効）
+- `featured`: `true`のGuideがDashboardに新しい順で最大3件表示される
+- `relatedLogs`: 実在する`docs/learning-log/YYYY-MM-DD.md`の日付だけを記述する
+- frontmatterは1行の`key: value`のみ対応。配列・ネスト・複数行は使えない
+
+Markdownの追加と`curriculumReferenceSlugs`への登録は同じcommitで行う。整合性は`pnpm check:content`（`pnpm lint`にも含まれる）で検証できる。
 
 ## 各必須Lessonの構成
 

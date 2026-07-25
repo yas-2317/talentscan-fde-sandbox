@@ -38,8 +38,7 @@ export type CurriculumCrossCuttingTheme = {
   practices: string[];
 };
 
-export type CurriculumReference = {
-  slug?: string;
+export type ExternalReferenceLink = {
   title: string;
   description: string;
   category: string;
@@ -222,21 +221,15 @@ export const curriculumCrossCuttingThemes: CurriculumCrossCuttingTheme[] = [
   },
 ];
 
-export const curriculumReferences: CurriculumReference[] = [
-  {
-    slug: "markdown-learning-hub-and-pull-request",
-    title: "Git・GitHub・Pull Request",
-    description: "教材追加を例に、変更を安全に共有する手順を確認する。",
-    category: "Git・デリバリー",
-    href: "/learning/readings/markdown-learning-hub-and-pull-request",
-  },
-  {
-    slug: "development-to-deployment",
-    title: "ローカル・build・Vercel",
-    description: "ローカルの変更が本番へ届くまでの境界と確認方法を整理する。",
-    category: "Git・デリバリー",
-    href: "/learning/readings/development-to-deployment",
-  },
+// Practice Guideの公開許可リスト。タイトル・説明・分類はMarkdown frontmatterを正とする。
+export const curriculumReferenceSlugs: readonly string[] = [
+  "markdown-learning-hub-and-pull-request",
+  "development-to-deployment",
+  "shell-and-vscode-basics",
+];
+
+// slugを持たない外部導線。Guideカードとは区別して表示する。
+export const externalReferenceLinks: ExternalReferenceLink[] = [
   {
     title: "実践トラブルシューティングログ",
     description: "実際の症状、原因、調査記録、復旧手順を横断的に参照する。",
@@ -267,8 +260,8 @@ export function getCurriculumLesson(slug: string) {
   return null;
 }
 
-export function getCurriculumReference(slug: string) {
-  return curriculumReferences.find((reference) => reference.slug === slug) ?? null;
+export function isCurriculumReference(slug: string) {
+  return curriculumReferenceSlugs.includes(slug);
 }
 
 export const curriculumLessons = curriculumChapters.flatMap((chapter) =>

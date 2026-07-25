@@ -7,6 +7,9 @@ prerequisite: Git・GitHub・Pull Requestの基本
 prerequisiteReadings: markdown-learning-hub-and-pull-request
 goal: 編集・確認・記録・共有・公開の各工程を自分の言葉で説明できる。
 relatedLogs: 2026-07-11
+category: Git・デリバリー
+estimatedMinutes: 25
+featured: true
 ---
 
 # 開発から公開まで — Next.js・Git・GitHub・Vercel

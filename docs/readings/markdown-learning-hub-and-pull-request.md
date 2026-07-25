@@ -7,6 +7,9 @@ prerequisite: 必要になったWeekで参照する
 prerequisiteReadings:
 goal: Markdown追加から画面表示までを追跡し、Pull Requestを使う理由を説明できる。
 relatedLogs: 2026-07-12
+category: Git・デリバリー
+estimatedMinutes: 25
+featured: true
 ---
 
 # Markdown駆動の学習ポータルとPull Request
