@@ -40,7 +40,7 @@ export default async function LearningPage() {
       <StatStrip
         items={[
           {
-            label: "Days of Llearning",
+            label: "Days of Learning",
             value: String(stats.totalDays),
             unit: "日",
             note: formatLearningPeriod(stats.firstDate ?? undefined, stats.latestDate ?? undefined),
