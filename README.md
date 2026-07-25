@@ -23,7 +23,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 ## Learning Content
 
 - Learning Hub: `/learning`
-- Reading教材: `/learning/readings` backed by `docs/readings/*.md`
+- Reading教材（Curriculum Lesson / Practice Guide）: `/learning/readings` backed by `docs/readings/*.md`。日次ログは`/learning/logs`、実インシデント記録は`/learning/troubleshooting`
 - Learning Log: `/learning/logs` backed by `docs/learning-log/*.md`
 - Troubleshooting Log: `/learning/troubleshooting` backed by `docs/troubleshooting-log/*.md`
 

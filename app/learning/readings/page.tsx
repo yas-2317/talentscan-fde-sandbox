@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { GuideCard } from "@/components/guide-card";
 import {
   curriculumChapters,
   curriculumCrossCuttingThemes,
   curriculumPhases,
-  curriculumReferences,
+  externalReferenceLinks,
 } from "@/lib/learning-curriculum";
 import { getLearningLogs } from "@/lib/learning-logs";
 import { getLearningProgress } from "@/lib/learning-roadmap";
@@ -19,6 +20,7 @@ export default async function ReadingsPage() {
   const [readings, logs] = await Promise.all([getReadings(), getLearningLogs()]);
   const readingBySlug = new Map(readings.map((reading) => [reading.slug, reading]));
   const lessonCount = readings.filter((reading) => reading.kind === "lesson").length;
+  const guides = readings.filter((reading) => reading.kind === "reference");
   const progress = getLearningProgress(logs);
   const progressByWeek = new Map(progress.chapters.map((chapter) => [chapter.week, chapter]));
 
@@ -28,7 +30,7 @@ export default async function ReadingsPage() {
         <div>
           <p className="eyebrow">FDE Curriculum</p>
           <h1>教材</h1>
-          <p>全12 Weekを順に進めます。Git・セキュリティ・デバッグは全期間を通じて実践します。</p>
+          <p>順番に進める12 WeekのCurriculum Lessonと、必要なときに参照するPractice Guideを分けて案内します。</p>
         </div>
         <div className="archive-summary reading-summary">
           <strong>12</strong>
@@ -143,23 +145,36 @@ export default async function ReadingsPage() {
         })}
       </div>
 
-      <section className="reference-library">
+      <section className="reference-library" id="practice-guides">
         <div className="reading-phase-heading">
           <div>
-            <h2>必要なときに参照する資料</h2>
+            <h2>Practice Guides</h2>
           </div>
-          <p>Referenceは横断テーマを支える参照資料です。必須Lessonの完了判定には含めません。</p>
+          <p>必要なときに参照する常設ガイドです。Guideの閲覧は必須Lessonの完了判定には含めません。</p>
         </div>
         <div className="reference-grid">
-          {curriculumReferences.map((reference) => (
-            <Link href={reference.href} className="reference-card" key={reference.href}>
-              <span>{reference.category}</span>
-              <h3>{reference.title}</h3>
-              <p>{reference.description}</p>
-              <strong>資料を開く →</strong>
-            </Link>
+          {guides.map((guide) => (
+            <GuideCard
+              href={`/learning/readings/${guide.slug}`}
+              category={guide.category}
+              title={guide.title}
+              summary={guide.summary}
+              estimatedMinutes={guide.estimatedMinutes}
+              key={guide.slug}
+            />
           ))}
         </div>
+        {externalReferenceLinks.length > 0 && (
+          <div className="related-library-links">
+            {externalReferenceLinks.map((link) => (
+              <Link href={link.href} key={link.href}>
+                <span>{link.category}</span>
+                <strong>{link.title}</strong>
+                <p>{link.description}</p>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint && node scripts/check-content.mjs",
+    "check:content": "node scripts/check-content.mjs"
   },
   "dependencies": {
     "mermaid": "^11.16.0",

@@ -3,7 +3,7 @@ import path from "node:path";
 import { parseFrontmatter } from "@/lib/markdown-frontmatter";
 import {
   getCurriculumLesson,
-  getCurriculumReference,
+  isCurriculumReference,
   type CurriculumPhaseId,
 } from "@/lib/learning-curriculum";
 
@@ -23,6 +23,9 @@ export type Reading = {
   prerequisiteReadings: string[];
   goal: string;
   relatedLogs: string[];
+  category: string | null;
+  estimatedMinutes: number | null;
+  featured: boolean;
   content: string;
 };
 
@@ -34,6 +37,11 @@ function splitList(value?: string) {
 
 function titleFromMarkdown(content: string) {
   return content.match(/^#\s+(.+)$/m)?.[1] ?? "Reading";
+}
+
+function parseEstimatedMinutes(value?: string) {
+  const minutes = Number(value);
+  return Number.isFinite(minutes) && minutes > 0 ? minutes : null;
 }
 
 export async function getReadings(): Promise<Reading[]> {
@@ -63,8 +71,7 @@ export async function getReading(slug: string): Promise<Reading | null> {
     const source = await fs.readFile(path.join(readingsDirectory, `${slug}.md`), "utf8");
     const { attributes, content } = parseFrontmatter(source);
     const curriculumLesson = getCurriculumLesson(slug);
-    const curriculumReference = getCurriculumReference(slug);
-    if (!curriculumLesson && !curriculumReference) return null;
+    if (!curriculumLesson && !isCurriculumReference(slug)) return null;
 
     return {
       slug,
@@ -79,6 +86,9 @@ export async function getReading(slug: string): Promise<Reading | null> {
       prerequisiteReadings: splitList(attributes.prerequisiteReadings),
       goal: attributes.goal || "内容を自分の言葉で説明できる。",
       relatedLogs: splitList(attributes.relatedLogs).filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date)),
+      category: attributes.category || null,
+      estimatedMinutes: parseEstimatedMinutes(attributes.estimatedMinutes),
+      featured: attributes.featured === "true",
       content,
     };
   } catch (error) {
