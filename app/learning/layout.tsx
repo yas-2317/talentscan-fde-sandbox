@@ -8,7 +8,7 @@ export default function LearningLayout({ children }: { children: React.ReactNode
           FDE Learning
           <small>TalentScan Sandbox</small>
         </Link>
-        <nav aria-label="学習ポータル">
+        <nav aria-label="Learning Navigator">
           <Link href="/learning">Dashboard</Link>
           <Link href="/learning/readings">Lessons</Link>
           <Link href="/learning/logs">Logs</Link>

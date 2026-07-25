@@ -24,7 +24,7 @@ export default async function LearningPage() {
   const resume = nextReading
     ? {
         href: `/learning/readings/${nextReading.slug}`,
-        label: `Lessonを再開 — ${nextReading.title}`,
+        label: `Restart Lesson — ${nextReading.title}`,
       }
     : null;
 
@@ -40,27 +40,27 @@ export default async function LearningPage() {
       <StatStrip
         items={[
           {
-            label: "累計学習日数",
+            label: "Days of Llearning",
             value: String(stats.totalDays),
             unit: "日",
             note: formatLearningPeriod(stats.firstDate ?? undefined, stats.latestDate ?? undefined),
           },
           {
-            label: "直近7日間",
+            label: "Last 7 Days",
             value: String(stats.thisWeekDays),
-            unit: "/ 7日",
-            note: "学習した日数",
+            unit: "/ 7days",
+            note: "days with learning logs in the last 7 days",
           },
           {
-            label: "完了した章",
+            label: "Completed Chapters",
             value: String(progress.completedChapterCount),
-            unit: "/ 12章",
-            note: `現在 Week ${progress.currentChapter.week}`,
+            unit: "/ 12Chapters",
+            note: `Current Week ${progress.currentChapter.week}`,
           },
           {
-            label: "今週のLesson",
+            label: "Lessons this week",
             value: String(progress.currentChapter.completedLessonCount),
-            unit: `/ ${progress.currentChapter.totalLessonCount}本`,
+            unit: `/ ${progress.currentChapter.totalLessonCount}Lessons`,
             note: progress.currentChapter.title,
           },
         ]}
@@ -69,7 +69,7 @@ export default async function LearningPage() {
       <div className="dashboard-board">
         <div className="dashboard-main">
           <section className="panel">
-            <SectionHeader title="学習の積み上がり" />
+            <SectionHeader title="Cumulative" />
             <div className="panel-body">
               <LearningHeatmap weeks={heatmapWeeks} totalDays={stats.totalDays} />
             </div>
@@ -77,16 +77,16 @@ export default async function LearningPage() {
 
           <section className="panel">
             <SectionHeader
-              title="学習ログ"
+              title="Learning Logs"
               href="/learning/logs"
-              linkLabel={`すべて見る(${logs.length}件)`}
+              linkLabel={`View All (${logs.length} entries)`}
             />
             <LearningTimeline logs={logs.slice(0, 7)} />
           </section>
         </div>
 
         <section className="panel dashboard-rail">
-          <SectionHeader title="FDEロードマップ" href="/learning/readings" linkLabel="教材へ" />
+          <SectionHeader title="FDE Roadmap" href="/learning/readings" linkLabel="教材へ" />
           <FdeRoadmap progress={progress} />
         </section>
       </div>
