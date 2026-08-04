@@ -226,6 +226,7 @@ export const curriculumReferenceSlugs: readonly string[] = [
   "markdown-learning-hub-and-pull-request",
   "development-to-deployment",
   "shell-and-vscode-basics",
+  "talentscan-code-elements",
 ];
 
 // slugを持たない外部導線。Guideカードとは区別して表示する。
